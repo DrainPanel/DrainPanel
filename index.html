@@ -224,6 +224,31 @@
         </div>
         <div class="menu-item" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')">
             <i class="fas fa-tree"></i> Sülale Sorgu
+            <div style="font-size: 11px; color: #475569; margin: 25px 0 10px 10px; font-weight: bold;">SOSYAL</div>
+
+<div class="menu-item" onclick="toggleDropdown()" style="justify-content: space-between;">
+    <span><i class="fas fa-link"></i> Linkler</span>
+    <i class="fas fa-chevron-down" id="drop-icon" style="font-size: 12px; transition: 0.3s;"></i>
+</div>
+
+<div id="link-dropdown" style="display: none; background: rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 10px; padding-left: 10px;">
+    <a href="https://t.me/SorguuuPanellBot" target="_blank" style="text-decoration: none;">
+        <div class="menu-item" style="font-size: 13px;">
+            <i class="fab fa-telegram"></i> Sorgu Botu
+        </div>
+    </a>
+    <a href="https://t.me/drainpaneltopluluk" target="_blank" style="text-decoration: none;">
+        <div class="menu-item" style="font-size: 13px;">
+            <i class="fas fa-users"></i> Topluluk
+        </div>
+    </a>
+    <a href="https://t.me/drainpanel" target="_blank" style="text-decoration: none;">
+        <div class="menu-item" style="font-size: 13px;">
+            <i class="fab fa-telegram-plane"></i> Kanal
+        </div>
+    </a>
+</div>
+
         </div>
     </div>
 </div>
@@ -329,5 +354,20 @@
         area.appendChild(card);
     }
 </script>
+function toggleDropdown() {
+    const drop = document.getElementById('link-dropdown');
+    const icon = document.getElementById('drop-icon');
+    
+    if (drop.style.display === "none") {
+        drop.style.display = "block";
+        icon.style.transform = "rotate(180deg)";
+        icon.style.color = "var(--accent-blue)";
+    } else {
+        drop.style.display = "none";
+        icon.style.transform = "rotate(0deg)";
+        icon.style.color = "inherit";
+    }
+}
+    
 </body>
 </html>
