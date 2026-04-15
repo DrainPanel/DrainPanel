@@ -8,14 +8,15 @@
     <style>
         :root {
             --primary: #3b82f6;
-            --bg: #0f172a;
-            --card: #1e293b;
+            --bg: #0b0f1a;
+            --card: #161e2d;
             --text: #f1f5f9;
-            --border: #334155;
+            --border: #1e293b;
+            --accent: #60a5fa;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             display: flex;
@@ -27,83 +28,100 @@
         .container {
             background: var(--card);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border);
         }
 
         h1 {
             text-align: center;
-            font-size: 24px;
-            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 13px; color: #94a3b8; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #94a3b8; }
 
         select, input {
             width: 100%;
-            padding: 12px;
-            background: #0f172a;
+            padding: 14px;
+            background: #0b0f1a;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             color: white;
             box-sizing: border-box;
+            font-size: 15px;
+            transition: all 0.2s;
         }
+
+        input:focus { border-color: var(--primary); outline: none; }
 
         button {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: 0.3s;
+            text-transform: uppercase;
         }
 
-        /* Veri Tablosu Stili */
-        #result-area {
-            margin-top: 25px;
-            display: none;
-        }
+        button:hover { background: #2563eb; transform: translateY(-1px); }
 
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #0f172a;
-            border-radius: 8px;
+        #result-area { margin-top: 30px; display: none; }
+
+        /* Kayıt Kartı Stili */
+        .person-card {
+            background: #1e293b;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
             overflow: hidden;
         }
 
-        .data-row {
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            padding: 12px;
-        }
-
-        .data-key {
-            flex: 1;
-            color: #60a5fa;
+        .card-header {
+            background: #2d3748;
+            padding: 12px 20px;
             font-weight: bold;
-            text-transform: capitalize;
             font-size: 14px;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
         }
 
-        .data-value {
+        .info-row {
+            display: flex;
+            padding: 12px 20px;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            flex: 1;
+            font-weight: 600;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .info-value {
             flex: 2;
-            color: #cbd5e1;
+            color: #e2e8f0;
             font-size: 14px;
         }
 
         .hidden { display: none; }
-        .loader { text-align: center; color: #60a5fa; margin: 20px 0; display: none; }
+        .loader { text-align: center; color: var(--accent); margin: 20px 0; display: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -114,36 +132,50 @@
     <div class="input-group">
         <label>Sorgu Türü</label>
         <select id="category" onchange="updateUI()">
-            <option value="tcgsm.php?tc=">TC'den GSM</option>
-            <option value="sulale.php?tc=">Sülale</option>
-            <option value="adres.php?tc=">Adres</option>
-            <option value="adsoyad">Ad Soyad</option>
-            <option value="gsmtc.php?gsm=">GSM'den TC</option>
+            <option value="tcgsm.php?tc=">TC'den GSM Sorgu</option>
+            <option value="sulale.php?tc=">Sülale Sorgu</option>
+            <option value="adres.php?tc=">Adres Sorgu</option>
+            <option value="adsoyad">Ad Soyad Sorgu</option>
+            <option value="gsmtc.php?gsm=">GSM'den TC Sorgu</option>
         </select>
     </div>
 
     <div id="single-input" class="input-group">
-        <label id="main-label">Bilgi Giriniz</label>
-        <input type="text" id="main-val" placeholder="Sorgulanacak veriyi yazın...">
+        <label id="main-label">Sorgulanacak Bilgi</label>
+        <input type="text" id="main-val" placeholder="Buraya yazın...">
     </div>
 
     <div id="multi-input" class="input-group hidden">
-        <input type="text" id="fname" placeholder="Ad" style="margin-bottom: 10px;">
-        <input type="text" id="lname" placeholder="Soyad" style="margin-bottom: 10px;">
-        <input type="text" id="city" placeholder="İl" style="margin-bottom: 10px;">
+        <input type="text" id="fname" placeholder="Ad" style="margin-bottom:10px">
+        <input type="text" id="lname" placeholder="Soyad" style="margin-bottom:10px">
+        <input type="text" id="city" placeholder="İl" style="margin-bottom:10px">
         <input type="text" id="dist" placeholder="İlçe">
     </div>
 
     <button onclick="startSorgu()">Sorgula</button>
     
-    <div id="loading" class="loader">Veriler Düzenleniyor...</div>
+    <div id="loading" class="loader">Veriler Analiz Ediliyor...</div>
 
-    <div id="result-area">
-        <div id="table-content" class="data-table"></div>
-    </div>
+    <div id="result-area"></div>
 </div>
 
 <script>
+    // Teknik kelimeleri Türkçeleştirme sözlüğü
+    const sozluk = {
+        "AD": "Ad",
+        "SOYAD": "Soyad",
+        "TC": "TC Kimlik No",
+        "DOGUMTARIHI": "Doğum Tarihi",
+        "NUFUSIL": "Nüfus İl",
+        "NUFUSILCE": "Nüfus İlçe",
+        "ANNEADI": "Anne Adı",
+        "BABAADI": "Baba Adı",
+        "GSM": "Telefon Numarası",
+        "ADRES": "İkametgah Adresi",
+        "UYRUK": "Uyruk",
+        "CINSIYET": "Cinsiyet"
+    };
+
     function updateUI() {
         const cat = document.getElementById('category').value;
         document.getElementById('single-input').classList.toggle('hidden', cat === 'adsoyad');
@@ -153,7 +185,6 @@
     async function startSorgu() {
         const cat = document.getElementById('category').value;
         const resArea = document.getElementById('result-area');
-        const table = document.getElementById('table-content');
         const loader = document.getElementById('loading');
         
         let url = "";
@@ -164,8 +195,8 @@
         }
 
         resArea.style.display = "none";
+        resArea.innerHTML = "";
         loader.style.display = "block";
-        table.innerHTML = "";
 
         try {
             const proxy = "https://corsproxy.io/?" + encodeURIComponent(url);
@@ -176,37 +207,54 @@
             loader.style.display = "none";
             resArea.style.display = "block";
 
-            // Veriyi Tabloya Dönüştürme Mantığı
+            // Eğer dizi (birden fazla sonuç) geldiyse hepsini kart olarak bas
             if (Array.isArray(data)) {
-                data.forEach((item, index) => {
-                    let header = document.createElement('div');
-                    header.style = "padding: 10px; background: #334155; font-weight: bold; font-size: 12px;";
-                    header.innerText = `KAYIT #${index + 1}`;
-                    table.appendChild(header);
-                    buildRows(item, table);
-                });
+                data.forEach((item, index) => renderCard(item, index + 1));
             } else {
-                buildRows(data, table);
+                renderCard(data, 1);
             }
 
         } catch (e) {
             loader.style.display = "none";
             resArea.style.display = "block";
-            table.innerHTML = "<div style='padding:20px; color:#f87171;'>Hata: Veri çekilemedi veya API yanıt vermedi. VPN kontrol edin.</div>";
+            resArea.innerHTML = "<div style='padding:20px; color:#f87171; text-align:center;'>Hata: Veri bulunamadı veya VPN kapalı.</div>";
         }
     }
 
-    function buildRows(obj, container) {
+    function renderCard(obj, count) {
+        const resArea = document.getElementById('result-area');
+        
+        // Kartı oluştur
+        let card = document.createElement('div');
+        card.className = "person-card";
+        
+        let header = document.createElement('div');
+        header.className = "card-header";
+        header.innerText = `SONUÇ KAYDI #${count}`;
+        card.appendChild(header);
+
+        // Gereksiz teknik verileri filtrele ve Türkçeleştir
         for (let key in obj) {
-            if (typeof obj[key] === 'object' && obj[key] !== null) {
-                buildRows(obj[key], container); // İç içe veriler varsa onları da çıkarır
-            } else {
-                let row = document.createElement('div');
-                row.className = "data-row";
-                row.innerHTML = `<div class="data-key">${key.replace('_', ' ')}:</div><div class="data-value">${obj[key]}</div>`;
-                container.appendChild(row);
-            }
+            let value = obj[key];
+            
+            // Gizlenecek teknik alanlar
+            if (["success", "message", "status", "count"].includes(key.toLowerCase())) continue;
+            if (value === null || value === "") continue;
+
+            let row = document.createElement('div');
+            row.className = "info-row";
+            
+            // Sözlükte varsa Türkçesini kullan, yoksa kelimeyi düzelt
+            let labelText = sozluk[key.toUpperCase()] || key.replace('_', ' ').toUpperCase();
+            
+            row.innerHTML = `
+                <div class="info-label">${labelText}</div>
+                <div class="info-value">${value}</div>
+            `;
+            card.appendChild(row);
         }
+        
+        resArea.appendChild(card);
     }
 </script>
 
