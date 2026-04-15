@@ -7,126 +7,103 @@
     <title>DRAİN SORGU PANELİ</title>
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
+            --primary: #3b82f6;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --border: #334155;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
         }
 
         .container {
-            background: var(--card-bg);
+            background: var(--card);
             width: 100%;
-            max-width: 550px;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
         }
 
         h1 {
             text-align: center;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 30px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
+            font-size: 24px;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #94a3b8;
-        }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 13px; color: #94a3b8; }
 
         select, input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px;
             background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             color: white;
-            font-size: 15px;
-            transition: all 0.3s ease;
             box-sizing: border-box;
-        }
-
-        select:focus, input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
             margin-top: 10px;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        #result-container {
-            margin-top: 30px;
-            padding: 20px;
-            background: #0f172a;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary-color);
+        /* Veri Tablosu Stili */
+        #result-area {
+            margin-top: 25px;
             display: none;
         }
 
-        #result-text {
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
-            font-size: 13px;
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-row {
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            padding: 12px;
+        }
+
+        .data-key {
+            flex: 1;
+            color: #60a5fa;
+            font-weight: bold;
+            text-transform: capitalize;
+            font-size: 14px;
+        }
+
+        .data-value {
+            flex: 2;
             color: #cbd5e1;
-            white-space: pre-wrap;
-            margin: 0;
-            overflow-x: auto;
+            font-size: 14px;
         }
 
         .hidden { display: none; }
-
-        .loader {
-            text-align: center;
-            color: var(--accent-color);
-            font-weight: 600;
-            display: none;
-            margin-top: 15px;
-        }
+        .loader { text-align: center; color: #60a5fa; margin: 20px 0; display: none; }
     </style>
 </head>
 <body>
@@ -134,101 +111,101 @@
 <div class="container">
     <h1>DRAİN SORGU PANELİ</h1>
     
-    <div class="form-group">
-        <label>İşlem Türü</label>
-        <select id="category" onchange="toggleInputs()">
-            <option value="tcgsm.php?tc=">TC'den GSM Sorgu</option>
-            <option value="sulale.php?tc=">Sülale Sorgu</option>
-            <option value="adres.php?tc=">Adres Sorgu</option>
-            <option value="adsoyad">Ad Soyad Sorgu</option>
-            <option value="gsmtc.php?gsm=">GSM'den TC Sorgu</option>
+    <div class="input-group">
+        <label>Sorgu Türü</label>
+        <select id="category" onchange="updateUI()">
+            <option value="tcgsm.php?tc=">TC'den GSM</option>
+            <option value="sulale.php?tc=">Sülale</option>
+            <option value="adres.php?tc=">Adres</option>
+            <option value="adsoyad">Ad Soyad</option>
+            <option value="gsmtc.php?gsm=">GSM'den TC</option>
         </select>
     </div>
 
-    <div id="standard-input" class="form-group">
-        <label id="input-label">TC Kimlik Numarası</label>
-        <input type="text" id="main-input" placeholder="Bilgiyi buraya yazın...">
+    <div id="single-input" class="input-group">
+        <label id="main-label">Bilgi Giriniz</label>
+        <input type="text" id="main-val" placeholder="Sorgulanacak veriyi yazın...">
     </div>
 
-    <div id="name-inputs" class="form-group hidden">
-        <label>Ad</label>
-        <input type="text" id="first-name" placeholder="Ad">
-        <label style="margin-top:10px;">Soyad</label>
-        <input type="text" id="last-name" placeholder="Soyad">
-        <label style="margin-top:10px;">İl</label>
-        <input type="text" id="city" placeholder="İl (Opsiyonel)">
-        <label style="margin-top:10px;">İlçe</label>
-        <input type="text" id="district" placeholder="İlçe (Opsiyonel)">
+    <div id="multi-input" class="input-group hidden">
+        <input type="text" id="fname" placeholder="Ad" style="margin-bottom: 10px;">
+        <input type="text" id="lname" placeholder="Soyad" style="margin-bottom: 10px;">
+        <input type="text" id="city" placeholder="İl" style="margin-bottom: 10px;">
+        <input type="text" id="dist" placeholder="İlçe">
     </div>
 
-    <button onclick="executeSearch()">Sorgula</button>
+    <button onclick="startSorgu()">Sorgula</button>
     
-    <div id="loader" class="loader">Veriler işleniyor, lütfen bekleyin...</div>
+    <div id="loading" class="loader">Veriler Düzenleniyor...</div>
 
-    <div id="result-container">
-        <pre id="result-text"></pre>
+    <div id="result-area">
+        <div id="table-content" class="data-table"></div>
     </div>
 </div>
 
 <script>
-    function toggleInputs() {
-        const category = document.getElementById('category').value;
-        const standardDiv = document.getElementById('standard-input');
-        const nameDiv = document.getElementById('name-inputs');
-        const label = document.getElementById('input-label');
+    function updateUI() {
+        const cat = document.getElementById('category').value;
+        document.getElementById('single-input').classList.toggle('hidden', cat === 'adsoyad');
+        document.getElementById('multi-input').classList.toggle('hidden', cat !== 'adsoyad');
+    }
 
-        if (category === 'adsoyad') {
-            standardDiv.classList.add('hidden');
-            nameDiv.classList.remove('hidden');
+    async function startSorgu() {
+        const cat = document.getElementById('category').value;
+        const resArea = document.getElementById('result-area');
+        const table = document.getElementById('table-content');
+        const loader = document.getElementById('loading');
+        
+        let url = "";
+        if (cat === 'adsoyad') {
+            url = `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fname').value}&soyadi=${document.getElementById('lname').value}&il=${document.getElementById('city').value}&ilce=${document.getElementById('dist').value}`;
         } else {
-            standardDiv.classList.remove('hidden');
-            nameDiv.classList.add('hidden');
-            label.innerText = category.includes('gsm=') ? "GSM Numarası" : "TC Kimlik Numarası";
+            url = `https://arastir.sbs/api/${cat}${document.getElementById('main-val').value}`;
+        }
+
+        resArea.style.display = "none";
+        loader.style.display = "block";
+        table.innerHTML = "";
+
+        try {
+            const proxy = "https://corsproxy.io/?" + encodeURIComponent(url);
+            const response = await fetch(proxy);
+            const rawData = await response.text();
+            const data = JSON.parse(rawData);
+
+            loader.style.display = "none";
+            resArea.style.display = "block";
+
+            // Veriyi Tabloya Dönüştürme Mantığı
+            if (Array.isArray(data)) {
+                data.forEach((item, index) => {
+                    let header = document.createElement('div');
+                    header.style = "padding: 10px; background: #334155; font-weight: bold; font-size: 12px;";
+                    header.innerText = `KAYIT #${index + 1}`;
+                    table.appendChild(header);
+                    buildRows(item, table);
+                });
+            } else {
+                buildRows(data, table);
+            }
+
+        } catch (e) {
+            loader.style.display = "none";
+            resArea.style.display = "block";
+            table.innerHTML = "<div style='padding:20px; color:#f87171;'>Hata: Veri çekilemedi veya API yanıt vermedi. VPN kontrol edin.</div>";
         }
     }
 
-    async function executeSearch() {
-        const category = document.getElementById('category').value;
-        const resultContainer = document.getElementById('result-container');
-        const resultText = document.getElementById('result-text');
-        const loader = document.getElementById('loader');
-        
-        let finalUrl = "";
-
-        if (category === 'adsoyad') {
-            const ad = document.getElementById('first-name').value;
-            const soyad = document.getElementById('last-name').value;
-            const il = document.getElementById('city').value;
-            const ilce = document.getElementById('district').value;
-            finalUrl = `https://arastir.sbs/api/adsoyad.php?adi=${ad}&soyadi=${soyad}&il=${il}&ilce=${ilce}`;
-        } else {
-            const value = document.getElementById('main-input').value;
-            if(!value) { alert("Lütfen boş bırakmayın."); return; }
-            finalUrl = `https://arastir.sbs/api/${category}${value}`;
-        }
-
-        resultContainer.style.display = "none";
-        loader.style.display = "block";
-
-        try {
-            // Bir önceki çalışan proxy sistemini koruyoruz
-            const proxy = "https://corsproxy.io/?" + encodeURIComponent(finalUrl);
-            const response = await fetch(proxy);
-            const data = await response.text();
-
-            loader.style.display = "none";
-            resultContainer.style.display = "block";
-
-            try {
-                const parsed = JSON.parse(data);
-                resultText.innerText = JSON.stringify(parsed, null, 4);
-            } catch {
-                resultText.innerText = data;
+    function buildRows(obj, container) {
+        for (let key in obj) {
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                buildRows(obj[key], container); // İç içe veriler varsa onları da çıkarır
+            } else {
+                let row = document.createElement('div');
+                row.className = "data-row";
+                row.innerHTML = `<div class="data-key">${key.replace('_', ' ')}:</div><div class="data-value">${obj[key]}</div>`;
+                container.appendChild(row);
             }
-        } catch (err) {
-            loader.style.display = "none";
-            resultContainer.style.display = "block";
-            resultText.innerText = "Bağlantı hatası: VPN'i kontrol edin veya API'nin aktif olduğundan emin olun.";
         }
     }
 </script>
