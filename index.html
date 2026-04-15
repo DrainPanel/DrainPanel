@@ -81,14 +81,16 @@
 
         #result-area { margin-top: 30px; display: none; }
 
-        /* Kayıt Kartı Stili */
         .person-card {
             background: #1e293b;
             border-radius: 14px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
             overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
         }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card-header {
             background: #2d3748;
@@ -118,6 +120,7 @@
             flex: 2;
             color: #e2e8f0;
             font-size: 14px;
+            word-break: break-word;
         }
 
         .hidden { display: none; }
@@ -142,7 +145,7 @@
 
     <div id="single-input" class="input-group">
         <label id="main-label">Sorgulanacak Bilgi</label>
-        <input type="text" id="main-val" placeholder="Buraya yazın...">
+        <input type="text" id="main-val" placeholder="Veriyi buraya yazın...">
     </div>
 
     <div id="multi-input" class="input-group hidden">
@@ -154,26 +157,16 @@
 
     <button onclick="startSorgu()">Sorgula</button>
     
-    <div id="loading" class="loader">Veriler Analiz Ediliyor...</div>
+    <div id="loading" class="loader">Sistem Sorgulanıyor...</div>
 
     <div id="result-area"></div>
 </div>
 
 <script>
-    // Teknik kelimeleri Türkçeleştirme sözlüğü
     const sozluk = {
-        "AD": "Ad",
-        "SOYAD": "Soyad",
-        "TC": "TC Kimlik No",
-        "DOGUMTARIHI": "Doğum Tarihi",
-        "NUFUSIL": "Nüfus İl",
-        "NUFUSILCE": "Nüfus İlçe",
-        "ANNEADI": "Anne Adı",
-        "BABAADI": "Baba Adı",
-        "GSM": "Telefon Numarası",
-        "ADRES": "İkametgah Adresi",
-        "UYRUK": "Uyruk",
-        "CINSIYET": "Cinsiyet"
+        "AD": "Ad", "SOYAD": "Soyad", "TC": "TC Kimlik No", "DOGUMTARIHI": "Doğum Tarihi",
+        "NUFUSIL": "Nüfus İl", "NUFUSILCE": "Nüfus İlçe", "ANNEADI": "Anne Adı",
+        "BABAADI": "Baba Adı", "GSM": "Telefon No", "ADRES": "Adres", "CINSIYET": "Cinsiyet"
     };
 
     function updateUI() {
@@ -202,59 +195,66 @@
             const proxy = "https://corsproxy.io/?" + encodeURIComponent(url);
             const response = await fetch(proxy);
             const rawData = await response.text();
-            const data = JSON.parse(rawData);
+            let data = JSON.parse(rawData);
+
+            // API bazen datayı bir "data" objesi içine koyar, onu çıkaralım
+            if (data.data) data = data.data;
 
             loader.style.display = "none";
             resArea.style.display = "block";
 
-            // Eğer dizi (birden fazla sonuç) geldiyse hepsini kart olarak bas
             if (Array.isArray(data)) {
                 data.forEach((item, index) => renderCard(item, index + 1));
-            } else {
+            } else if (typeof data === 'object' && data !== null) {
                 renderCard(data, 1);
+            } else {
+                resArea.innerHTML = "<div style='text-align:center;'>Sonuç bulunamadı.</div>";
             }
 
         } catch (e) {
             loader.style.display = "none";
             resArea.style.display = "block";
-            resArea.innerHTML = "<div style='padding:20px; color:#f87171; text-align:center;'>Hata: Veri bulunamadı veya VPN kapalı.</div>";
+            resArea.innerHTML = "<div style='color:#f87171; text-align:center;'>Hata: Veri alınamadı. VPN'i kontrol edin.</div>";
         }
     }
 
     function renderCard(obj, count) {
         const resArea = document.getElementById('result-area');
-        
-        // Kartı oluştur
         let card = document.createElement('div');
         card.className = "person-card";
         
         let header = document.createElement('div');
         header.className = "card-header";
-        header.innerText = `SONUÇ KAYDI #${count}`;
+        header.innerText = `KAYIT #${count}`;
         card.appendChild(header);
 
-        // Gereksiz teknik verileri filtrele ve Türkçeleştir
+        // Obje içindeki her bir bilgiyi döngüye sok
         for (let key in obj) {
             let value = obj[key];
             
-            // Gizlenecek teknik alanlar
-            if (["success", "message", "status", "count"].includes(key.toLowerCase())) continue;
+            // Gereksizleri atla
+            if (["success", "status", "message"].includes(key.toLowerCase())) continue;
             if (value === null || value === "") continue;
 
-            let row = document.createElement('div');
-            row.className = "info-row";
-            
-            // Sözlükte varsa Türkçesini kullan, yoksa kelimeyi düzelt
-            let labelText = sozluk[key.toUpperCase()] || key.replace('_', ' ').toUpperCase();
-            
-            row.innerHTML = `
-                <div class="info-label">${labelText}</div>
-                <div class="info-value">${value}</div>
-            `;
-            card.appendChild(row);
+            // EĞER DEĞER BİR OBJE İSE (Yani "Object" yazan hata buradaydı)
+            if (typeof value === 'object') {
+                for (let subKey in value) {
+                    addInfoRow(card, subKey, value[subKey]);
+                }
+            } else {
+                addInfoRow(card, key, value);
+            }
         }
-        
         resArea.appendChild(card);
+    }
+
+    function addInfoRow(parent, key, val) {
+        if (val === null || typeof val === 'object') return; // Hala objeyse veya boşsa yazma
+        let row = document.createElement('div');
+        row.className = "info-row";
+        let labelText = sozluk[key.toUpperCase()] || key.replace(/_/g, ' ').toUpperCase();
+        row.innerHTML = `<div class="info-label">${labelText}</div><div class="info-value">${val}</div>`;
+        parent.appendChild(row);
     }
 </script>
 
