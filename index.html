@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* --- ÜST BAR (Navbar) --- */
         .navbar {
             height: 60px;
             background: rgba(10, 15, 24, 0.8);
@@ -38,16 +37,9 @@
             border-bottom: 1px solid #1e293b;
         }
 
-        .menu-btn {
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--accent-blue);
-            transition: 0.3s;
-        }
-
+        .menu-btn { font-size: 24px; cursor: pointer; color: var(--accent-blue); }
         .nav-title { margin-left: 20px; font-weight: 800; letter-spacing: 1px; }
 
-        /* --- YAN MENÜ (Sidebar) --- */
         .sidebar {
             position: fixed;
             left: -280px;
@@ -61,6 +53,8 @@
             box-sizing: border-box;
             border-right: 1px solid var(--accent-blue);
             box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            /* ALT TARAFIN GÖZÜKMEME SORUNUNU ÇÖZEN KISIM */
+            overflow-y: auto; 
         }
 
         .sidebar.active { left: 0; }
@@ -82,7 +76,6 @@
             border: 1px solid var(--accent-blue);
         }
 
-        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
         .menu-item {
             padding: 15px;
             display: flex;
@@ -92,6 +85,7 @@
             transition: 0.3s;
             color: var(--text-gray);
             margin-bottom: 5px;
+            text-decoration: none;
         }
 
         .menu-item i { margin-right: 15px; font-size: 18px; width: 20px; text-align: center; }
@@ -106,25 +100,13 @@
             border-radius: 10px;
             margin-bottom: 10px;
             padding-left: 10px;
-            overflow: hidden;
         }
 
-        .close-sidebar {
-            position: absolute; right: 20px; top: 20px;
-            cursor: pointer; font-size: 20px; color: var(--text-gray);
-        }
+        .close-sidebar { position: absolute; right: 20px; top: 20px; cursor: pointer; font-size: 20px; color: var(--text-gray); }
 
-        /* --- ANA İÇERİK --- */
-        .main-content {
-            margin-top: 80px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: calc(100vh - 80px);
-        }
+        .main-content { margin-top: 80px; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-        .welcome-screen { text-align: center; padding: 40px; animation: fadeIn 1s; }
+        .welcome-screen { text-align: center; padding: 40px; }
         .welcome-screen h2 {
             font-size: 28px;
             background: linear-gradient(to right, #3b82f6, #8b5cf6);
@@ -150,18 +132,15 @@
             border: none; border-radius: 10px; color: white; font-weight: 800; cursor: pointer;
         }
 
-        #result-area { margin-top: 20px; width: 100%; max-width: 500px; }
         .res-card {
             background: #1e293b; padding: 15px; border-radius: 12px;
-            margin-bottom: 10px; border-left: 4px solid var(--accent-blue);
+            margin-bottom: 10px; border-left: 4px solid var(--accent-blue); width: 100%; max-width: 500px;
         }
 
         .overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.7); display:none; z-index:150;
         }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -211,14 +190,14 @@
             <i class="fas fa-chevron-down" id="drop-icon" style="font-size: 12px; transition: 0.3s;"></i>
         </div>
         <div id="link-dropdown" class="dropdown-container">
-            <a href="https://t.me/SorguuuPanellBot" target="_blank" style="text-decoration: none;">
-                <div class="menu-item" style="font-size: 13px;"><i class="fab fa-telegram"></i> Sorgu Botu</div>
+            <a href="https://t.me/SorguuuPanellBot" target="_blank" class="menu-item" style="font-size: 13px;">
+                <i class="fab fa-telegram"></i> Sorgu Botu
             </a>
-            <a href="https://t.me/drainpaneltopluluk" target="_blank" style="text-decoration: none;">
-                <div class="menu-item" style="font-size: 13px;"><i class="fas fa-users"></i> Topluluk</div>
+            <a href="https://t.me/drainpaneltopluluk" target="_blank" class="menu-item" style="font-size: 13px;">
+                <i class="fas fa-users"></i> Topluluk
             </a>
-            <a href="https://t.me/drainpanel" target="_blank" style="text-decoration: none;">
-                <div class="menu-item" style="font-size: 13px;"><i class="fab fa-telegram-plane"></i> Kanal</div>
+            <a href="https://t.me/drainpanel" target="_blank" class="menu-item" style="font-size: 13px;">
+                <i class="fas fa-user-tie"></i> İletişim
             </a>
         </div>
     </div>
