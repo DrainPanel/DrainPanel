@@ -4,160 +4,264 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>DRAİN SORGU PANELİ</title>
+    <title>DRAİN SORGU PANELİ VİP</title>
     <style>
+        /* --- KÜRESEL AYARLAR VE DEĞİŞKENLER (PREMIUM RENKLER) --- */
         :root {
-            --primary: #3b82f6;
-            --bg: #0b0f1a;
-            --card: #161e2d;
-            --text: #f1f5f9;
+            --bg-dark: #020617; /* Çok koyu lacivert/siyah */
+            --bg-panel: #0f172a; /* Panel arka planı */
+            --primary: #3b82f6; /* Canlı mavi */
+            --accent: #a855f7; /* Mor aksan */
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
             --border: #1e293b;
-            --accent: #60a5fa;
+            --glow-mavi: 0 0 15px rgba(59, 130, 246, 0.5);
+            --glow-mor: 0 0 15px rgba(168, 85, 247, 0.5);
         }
 
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace; /* Hacker tarzı yazı tipi */
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
-            margin: 0;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* --- SÜREKLİ HAREKET EDEN ARKA PLAN ANİMASYONU (Canlılık) --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 1) 0%, rgba(2, 6, 23, 1) 100%);
+            animation: backgroundShift 20s infinite linear;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- ANA KONTEYNER (Cam Efekti ve Parlama) --- */
         .container {
-            background: var(--card);
+            background: rgba(15, 23, 42, 0.8); /* Saydam cam efekti */
             width: 100%;
             max-width: 650px;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), var(--glow-mavi);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px); /* Arka planı bulandır */
         }
 
+        /* Konteynerin etrafında dönen ışık efekti */
+        .container::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, var(--primary), transparent, var(--accent), transparent);
+            animation: rotateGlow 6s infinite linear;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- BAŞLIK (Sürekli Parlayan ve Renk Değiştiren Animasyon) --- */
         h1 {
             text-align: center;
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
+            font-size: 30px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 0 0 10px white, 0 0 20px var(--primary), 0 0 30px var(--accent);
+            animation: titlePulse 3s infinite alternate;
         }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #94a3b8; }
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 5px white, 0 0 10px var(--primary); }
+            50% { text-shadow: 0 0 15px white, 0 0 30px var(--primary), 0 0 40px var(--accent); color: #fff; }
+            100% { text-shadow: 0 0 5px white, 0 0 10px var(--accent); color: #ddd; }
+        }
+
+        /* --- GİRİŞ ALANLARI VE ETİKETLER --- */
+        .input-group { margin-bottom: 25px; position: relative; }
+        label { display: block; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
         select, input {
             width: 100%;
-            padding: 14px;
-            background: #0b0f1a;
-            border: 1px solid var(--border);
+            padding: 16px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid #1e293b;
             border-radius: 12px;
-            color: white;
+            color: var(--primary);
             box-sizing: border-box;
-            font-size: 15px;
-            transition: all 0.2s;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        input:focus { border-color: var(--primary); outline: none; }
+        select:focus, input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: var(--glow-mavi);
+            color: white;
+        }
 
+        /* --- BUTON (Premium Parlama ve Hareket) --- */
         button {
             width: 100%;
-            padding: 16px;
-            background: var(--primary);
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white;
             border: none;
             border-radius: 12px;
-            font-weight: 800;
-            font-size: 16px;
+            font-weight: 900;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: 0.3s;
-            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--glow-mavi);
         }
 
-        button:hover { background: #2563eb; transform: translateY(-1px); }
+        button:hover {
+            box-shadow: 0 0 20px var(--primary), 0 0 30px var(--accent);
+            transform: translateY(-2px);
+        }
 
-        #result-area { margin-top: 30px; display: none; }
+        /* Butonun içinden geçen parlama efekti */
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before { left: 100%; }
+
+        /* --- SONUÇ ALANI (Canlı Kartlar) --- */
+        #result-area { margin-top: 40px; display: none; }
 
         .person-card {
-            background: #1e293b;
-            border-radius: 14px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: var(--glow-mor);
             overflow: hidden;
-            animation: fadeIn 0.4s ease-out;
+            animation: cardSlideIn 0.5s ease-out;
+            position: relative;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes cardSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .card-header {
-            background: #2d3748;
-            padding: 12px 20px;
+            background: rgba(45, 55, 72, 0.8);
+            padding: 15px 25px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 15px;
             color: var(--accent);
             border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .info-row {
             display: flex;
-            padding: 12px 20px;
-            border-bottom: 1px solid #2d3748;
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.2s;
         }
 
-        .info-row:last-child { border-bottom: none; }
+        .info-row:hover { background: rgba(59, 130, 246, 0.1); } /* Satır üzerine gelince parlama */
 
         .info-label {
             flex: 1;
-            font-weight: 600;
-            color: #94a3b8;
-            font-size: 13px;
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
         }
 
         .info-value {
             flex: 2;
-            color: #e2e8f0;
-            font-size: 14px;
+            color: var(--primary);
+            font-size: 15px;
+            text-shadow: 0 0 5px var(--primary); /* Yazı parlaması */
             word-break: break-word;
         }
 
+        /* --- YÜKLEME ANİMASYONU VE DURUM --- */
         .hidden { display: none; }
-        .loader { text-align: center; color: var(--accent); margin: 20px 0; display: none; font-weight: bold; }
+        .loader { text-align: center; color: var(--accent); margin: 25px 0; display: none; font-weight: bold; font-size: 16px; text-transform: uppercase; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        
+        .status-vip { position: absolute; top: 15px; right: 20px; font-size: 10px; color: var(--accent); font-weight: bold; border: 1px solid var(--accent); padding: 2px 6px; border-radius: 4px; text-transform: uppercase; box-shadow: var(--glow-mor); }
+
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="status-vip">VIP ACCESS</div>
     <h1>DRAİN SORGU PANELİ</h1>
     
     <div class="input-group">
-        <label>Sorgu Türü</label>
+        <label>Sorgu Katmanı</label>
         <select id="category" onchange="updateUI()">
-            <option value="tcgsm.php?tc=">TC'den GSM Sorgu</option>
-            <option value="sulale.php?tc=">Sülale Sorgu</option>
-            <option value="adres.php?tc=">Adres Sorgu</option>
-            <option value="adsoyad">Ad Soyad Sorgu</option>
-            <option value="gsmtc.php?gsm=">GSM'den TC Sorgu</option>
+            <option value="tcgsm.php?tc=">TC -> GSM (PROTOKOL A)</option>
+            <option value="sulale.php?tc=">SÜLALE (PROTOKOL B)</option>
+            <option value="adres.php?tc=">ADRES (PROTOKOL C)</option>
+            <option value="adsoyad">AD-SOYAD (PROTOKOL D)</option>
+            <option value="gsmtc.php?gsm=">GSM -> TC (PROTOKOL E)</option>
         </select>
     </div>
 
     <div id="single-input" class="input-group">
-        <label id="main-label">Sorgulanacak Bilgi</label>
-        <input type="text" id="main-val" placeholder="Veriyi buraya yazın...">
+        <label id="main-label">Sorgu Verisi</label>
+        <input type="text" id="main-val" placeholder="Şifreli veriyi girin...">
     </div>
 
     <div id="multi-input" class="input-group hidden">
-        <input type="text" id="fname" placeholder="Ad" style="margin-bottom:10px">
-        <input type="text" id="lname" placeholder="Soyad" style="margin-bottom:10px">
-        <input type="text" id="city" placeholder="İl" style="margin-bottom:10px">
+        <input type="text" id="fname" placeholder="Ad" style="margin-bottom:15px">
+        <input type="text" id="lname" placeholder="Soyad" style="margin-bottom:15px">
+        <input type="text" id="city" placeholder="İl" style="margin-bottom:15px">
         <input type="text" id="dist" placeholder="İlçe">
     </div>
 
-    <button onclick="startSorgu()">Sorgula</button>
+    <button onclick="startSorgu()">SORGUYU BAŞLAT</button>
     
-    <div id="loading" class="loader">Sistem Sorgulanıyor...</div>
+    <div id="loading" class="loader">Veri Katmanları Çözülüyor...</div>
 
     <div id="result-area"></div>
 </div>
@@ -173,6 +277,8 @@
         const cat = document.getElementById('category').value;
         document.getElementById('single-input').classList.toggle('hidden', cat === 'adsoyad');
         document.getElementById('multi-input').classList.toggle('hidden', cat !== 'adsoyad');
+        const label = document.getElementById('main-label');
+        label.innerText = cat.includes('gsm=') ? "GSM Numarası" : "TC Kimlik Numarası";
     }
 
     async function startSorgu() {
@@ -184,7 +290,9 @@
         if (cat === 'adsoyad') {
             url = `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fname').value}&soyadi=${document.getElementById('lname').value}&il=${document.getElementById('city').value}&ilce=${document.getElementById('dist').value}`;
         } else {
-            url = `https://arastir.sbs/api/${cat}${document.getElementById('main-val').value}`;
+            const val = document.getElementById('main-val').value;
+            if(!val) { alert("Sorgu verisi boş olamaz!"); return; }
+            url = `https://arastir.sbs/api/${cat}${val}`;
         }
 
         resArea.style.display = "none";
@@ -197,7 +305,6 @@
             const rawData = await response.text();
             let data = JSON.parse(rawData);
 
-            // API bazen datayı bir "data" objesi içine koyar, onu çıkaralım
             if (data.data) data = data.data;
 
             loader.style.display = "none";
@@ -205,16 +312,16 @@
 
             if (Array.isArray(data)) {
                 data.forEach((item, index) => renderCard(item, index + 1));
-            } else if (typeof data === 'object' && data !== null) {
+            } else if (typeof data === 'object' && data !== null && Object.keys(data).length > 0) {
                 renderCard(data, 1);
             } else {
-                resArea.innerHTML = "<div style='text-align:center;'>Sonuç bulunamadı.</div>";
+                resArea.innerHTML = "<div style='text-align:center; color:var(--text-muted); padding:20px; border:1px dashed var(--border); border-radius:12px;'>Kayıt bulunamadı.</div>";
             }
 
         } catch (e) {
             loader.style.display = "none";
             resArea.style.display = "block";
-            resArea.innerHTML = "<div style='color:#f87171; text-align:center;'>Hata: Veri alınamadı. VPN'i kontrol edin.</div>";
+            resArea.innerHTML = "<div style='color:#f87171; text-align:center; padding:20px; border:1px solid #f87171; border-radius:12px;'>Hata: Veri katmanına ulaşılamadı. VPN durumunu ve API'yi kontrol edin.</div>";
         }
     }
 
@@ -225,18 +332,14 @@
         
         let header = document.createElement('div');
         header.className = "card-header";
-        header.innerText = `KAYIT #${count}`;
+        header.innerText = `BAŞARILI SORGULAMA - KAYIT #${count}`;
         card.appendChild(header);
 
-        // Obje içindeki her bir bilgiyi döngüye sok
         for (let key in obj) {
             let value = obj[key];
-            
-            // Gereksizleri atla
-            if (["success", "status", "message"].includes(key.toLowerCase())) continue;
-            if (value === null || value === "") continue;
+            if (["success", "status", "message", "count"].includes(key.toLowerCase())) continue;
+            if (value === null || value === "" || value === undefined) continue;
 
-            // EĞER DEĞER BİR OBJE İSE (Yani "Object" yazan hata buradaydı)
             if (typeof value === 'object') {
                 for (let subKey in value) {
                     addInfoRow(card, subKey, value[subKey]);
@@ -249,7 +352,7 @@
     }
 
     function addInfoRow(parent, key, val) {
-        if (val === null || typeof val === 'object') return; // Hala objeyse veya boşsa yazma
+        if (val === null || val === "" || typeof val === 'object') return; 
         let row = document.createElement('div');
         row.className = "info-row";
         let labelText = sozluk[key.toUpperCase()] || key.replace(/_/g, ' ').toUpperCase();
