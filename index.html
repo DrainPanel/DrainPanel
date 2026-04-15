@@ -45,8 +45,6 @@
             transition: 0.3s;
         }
 
-        .menu-btn:hover { text-shadow: var(--neon-shadow); }
-
         .nav-title { margin-left: 20px; font-weight: 800; letter-spacing: 1px; }
 
         /* --- YAN MENÜ (Sidebar) --- */
@@ -100,10 +98,16 @@
         .menu-item:hover, .menu-item.active {
             background: rgba(59, 130, 246, 0.1);
             color: white;
-            box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.1);
         }
 
-        .menu-item:hover i { color: var(--accent-blue); }
+        .dropdown-container {
+            display: none;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            overflow: hidden;
+        }
 
         .close-sidebar {
             position: absolute; right: 20px; top: 20px;
@@ -120,12 +124,7 @@
             min-height: calc(100vh - 80px);
         }
 
-        .welcome-screen {
-            text-align: center;
-            padding: 40px;
-            animation: fadeIn 1s;
-        }
-
+        .welcome-screen { text-align: center; padding: 40px; animation: fadeIn 1s; }
         .welcome-screen h2 {
             font-size: 28px;
             background: linear-gradient(to right, #3b82f6, #8b5cf6);
@@ -134,43 +133,22 @@
         }
 
         .sorgu-panel {
-            background: #0f172a;
-            padding: 30px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid #1e293b;
-            display: none; /* Başta gizli */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #0f172a; padding: 30px; border-radius: 20px;
+            width: 100%; max-width: 500px; border: 1px solid #1e293b;
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            background: #05070a;
-            border: 1px solid #1e293b;
-            border-radius: 10px;
-            color: white;
-            box-sizing: border-box;
-            transition: 0.3s;
+            width: 100%; padding: 14px; margin-bottom: 15px;
+            background: #05070a; border: 1px solid #1e293b;
+            border-radius: 10px; color: white; box-sizing: border-box;
         }
-
-        input:focus { border-color: var(--accent-blue); outline: none; box-shadow: var(--neon-shadow); }
 
         button {
-            width: 100%;
-            padding: 15px;
+            width: 100%; padding: 15px;
             background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
+            border: none; border-radius: 10px; color: white; font-weight: 800; cursor: pointer;
         }
-
-        button:hover { transform: translateY(-2px); box-shadow: var(--neon-shadow); }
 
         #result-area { margin-top: 20px; width: 100%; max-width: 500px; }
         .res-card {
@@ -209,6 +187,7 @@
         <div class="menu-item active" onclick="showWelcome()">
             <i class="fas fa-home"></i> Ana Sayfa
         </div>
+
         <div style="font-size: 11px; color: #475569; margin: 15px 0 10px 10px; font-weight: bold;">SORGULAR</div>
         <div class="menu-item" onclick="openPanel('tcgsm.php?tc=', 'TC Sorgu')">
             <i class="fas fa-id-card"></i> TC'den GSM
@@ -224,31 +203,23 @@
         </div>
         <div class="menu-item" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')">
             <i class="fas fa-tree"></i> Sülale Sorgu
-            <div style="font-size: 11px; color: #475569; margin: 25px 0 10px 10px; font-weight: bold;">SOSYAL</div>
-
-<div class="menu-item" onclick="toggleDropdown()" style="justify-content: space-between;">
-    <span><i class="fas fa-link"></i> Linkler</span>
-    <i class="fas fa-chevron-down" id="drop-icon" style="font-size: 12px; transition: 0.3s;"></i>
-</div>
-
-<div id="link-dropdown" style="display: none; background: rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 10px; padding-left: 10px;">
-    <a href="https://t.me/SorguuuPanellBot" target="_blank" style="text-decoration: none;">
-        <div class="menu-item" style="font-size: 13px;">
-            <i class="fab fa-telegram"></i> Sorgu Botu
         </div>
-    </a>
-    <a href="https://t.me/drainpaneltopluluk" target="_blank" style="text-decoration: none;">
-        <div class="menu-item" style="font-size: 13px;">
-            <i class="fas fa-users"></i> Topluluk
-        </div>
-    </a>
-    <a href="https://t.me/drainpanel" target="_blank" style="text-decoration: none;">
-        <div class="menu-item" style="font-size: 13px;">
-            <i class="fab fa-telegram-plane"></i> Kanal
-        </div>
-    </a>
-</div>
 
+        <div style="font-size: 11px; color: #475569; margin: 15px 0 10px 10px; font-weight: bold;">SOSYAL</div>
+        <div class="menu-item" onclick="toggleDropdown()" style="justify-content: space-between;">
+            <span><i class="fas fa-link"></i> Linkler</span>
+            <i class="fas fa-chevron-down" id="drop-icon" style="font-size: 12px; transition: 0.3s;"></i>
+        </div>
+        <div id="link-dropdown" class="dropdown-container">
+            <a href="https://t.me/SorguuuPanellBot" target="_blank" style="text-decoration: none;">
+                <div class="menu-item" style="font-size: 13px;"><i class="fab fa-telegram"></i> Sorgu Botu</div>
+            </a>
+            <a href="https://t.me/drainpaneltopluluk" target="_blank" style="text-decoration: none;">
+                <div class="menu-item" style="font-size: 13px;"><i class="fas fa-users"></i> Topluluk</div>
+            </a>
+            <a href="https://t.me/drainpanel" target="_blank" style="text-decoration: none;">
+                <div class="menu-item" style="font-size: 13px;"><i class="fab fa-telegram-plane"></i> Kanal</div>
+            </a>
         </div>
     </div>
 </div>
@@ -285,6 +256,14 @@
         overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
     }
 
+    function toggleDropdown() {
+        const drop = document.getElementById('link-dropdown');
+        const icon = document.getElementById('drop-icon');
+        const isOpen = drop.style.display === "block";
+        drop.style.display = isOpen ? "none" : "block";
+        icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+    }
+
     function showWelcome() {
         document.getElementById('welcome').style.display = 'block';
         document.getElementById('panel').style.display = 'none';
@@ -312,34 +291,23 @@
     async function startSorgu() {
         const resultArea = document.getElementById('result-area');
         resultArea.innerHTML = "<p style='text-align:center;'>Sorgulanıyor...</p>";
-        
         let url = "";
         if(currentEndpoint === 'adsoyad') {
-            const ad = document.getElementById('fn').value;
-            const soyad = document.getElementById('ln').value;
-            const il = document.getElementById('city').value;
-            const ilce = document.getElementById('dist').value;
-            url = `https://arastir.sbs/api/adsoyad.php?adi=${ad}&soyadi=${soyad}&il=${il}&ilce=${ilce}`;
+            url = `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fn').value}&soyadi=${document.getElementById('ln').value}&il=${document.getElementById('city').value}&ilce=${document.getElementById('dist').value}`;
         } else {
-            const val = document.getElementById('main-val').value;
-            url = `https://arastir.sbs/api/${currentEndpoint}${val}`;
+            url = `https://arastir.sbs/api/${currentEndpoint}${document.getElementById('main-val').value}`;
         }
-
         try {
             const proxy = "https://corsproxy.io/?" + encodeURIComponent(url);
             const res = await fetch(proxy);
             const raw = await res.text();
             let data = JSON.parse(raw);
             if(data.data) data = data.data;
-
             resultArea.innerHTML = "";
-            if(Array.isArray(data)) {
-                data.forEach(item => renderCard(item));
-            } else {
-                renderCard(data);
-            }
+            if(Array.isArray(data)) data.forEach(item => renderCard(item));
+            else renderCard(data);
         } catch(e) {
-            resultArea.innerHTML = "<p style='color:red;'>Hata! VPN açık mı?</p>";
+            resultArea.innerHTML = "<p style='color:red; text-align:center;'>Hata! VPN durumunu kontrol edin.</p>";
         }
     }
 
@@ -349,25 +317,10 @@
         card.className = "res-card";
         for(let k in obj) {
             if(["success","message","status"].includes(k.toLowerCase()) || !obj[k]) continue;
-            card.innerHTML += `<div style="font-size:13px; margin-bottom:5px;"><b style="color:var(--accent-blue)">${k.replace('_',' ')}:</b> ${obj[k]}</div>`;
+            card.innerHTML += `<div style="font-size:13px; margin-bottom:5px;"><b style="color:var(--accent-blue)">${k.replace(/_/g,' ').toUpperCase()}:</b> ${obj[k]}</div>`;
         }
         area.appendChild(card);
     }
 </script>
-function toggleDropdown() {
-    const drop = document.getElementById('link-dropdown');
-    const icon = document.getElementById('drop-icon');
-    
-    if (drop.style.display === "none") {
-        drop.style.display = "block";
-        icon.style.transform = "rotate(180deg)";
-        icon.style.color = "var(--accent-blue)";
-    } else {
-        drop.style.display = "none";
-        icon.style.transform = "rotate(0deg)";
-        icon.style.color = "inherit";
-    }
-}
-    
 </body>
 </html>
