@@ -3,24 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorgu Paneli</title>
+    <title>Sorgu Paneli v3</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1d; color: white; display: flex; justify-content: center; padding: 20px; }
-        .container { background: #242526; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; max-width: 450px; }
-        h2 { text-align: center; color: #4e9af1; margin-bottom: 20px; }
-        select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #3a3b3c; border-radius: 8px; box-sizing: border-box; background: #3a3b3c; color: white; outline: none; }
-        button { background-color: #4e9af1; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
-        button:hover { background-color: #357abd; }
-        #sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; background: #111; border: 1px solid #444; white-space: pre-wrap; font-size: 13px; color: #00ff00; display: none; overflow-x: auto; }
-        .gizli { display: none; }
+        /* Tasarımı biraz daha "Hacker" ve modern yapalım */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0d1117; 
+            color: #c9d1d9; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container { 
+            background: #161b22; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 480px; 
+            border: 1px solid #30363d;
+        }
+        h2 { text-align: center; color: #58a6ff; margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #8b949e; }
+        select, input, button { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #30363d; 
+            border-radius: 6px; 
+            background: #0d1117; 
+            color: #c9d1d9; 
+            box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color: #58a6ff; }
+        button { 
+            background-color: #238636; 
+            color: white; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #2ea043; }
+        button:disabled { background-color: #23863680; cursor: not-allowed; }
+        
+        #sonuc { 
+            margin-top: 25px; 
+            padding: 15px; 
+            border-radius: 6px; 
+            background: #010409; 
+            border: 1px solid #30363d; 
+            white-space: pre-wrap; 
+            font-family: 'Consolas', monospace; 
+            font-size: 13px; 
+            color: #7ee787; 
+            display: none;
+            overflow-x: auto;
+        }
+        .status { font-size: 12px; text-align: center; margin-top: 10px; color: #8b949e; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Sistem Sorgu</h2>
+    <h2>SORGULAMA MERKEZİ</h2>
     
-    <select id="kategori" onchange="inputlariGuncelle()">
+    <label>İşlem Kategorisi</label>
+    <select id="kategori" onchange="inputAyarla()">
         <option value="gsm">TC'den GSM Sorgu</option>
         <option value="sulale">Sülale Sorgu</option>
         <option value="adres">Adres Sorgu</option>
@@ -28,82 +81,75 @@
         <option value="gsmtc">GSM'den TC Sorgu</option>
     </select>
 
-    <div id="tekliInput">
-        <input type="text" id="anaInput" placeholder="TC Numarası Giriniz">
+    <div id="inputAlani">
+        <label id="inputLabel">TC Kimlik Numarası</label>
+        <input type="text" id="anaInput" placeholder="11 haneli TC girin...">
     </div>
 
-    <div id="cokluInput" class="gizli">
-        <input type="text" id="ad" placeholder="Ad">
-        <input type="text" id="soyad" placeholder="Soyad">
-        <input type="text" id="il" placeholder="İl (Örn: İstanbul)">
-        <input type="text" id="ilce" placeholder="İlçe (Örn: Kadıköy)">
-    </div>
-
-    <button onclick="sorgula()">SORGULA</button>
+    <button id="sorguBtn" onclick="veriyiCek()">VERİLERİ GETİR</button>
+    <div class="status">VPN açık olduğundan emin olun.</div>
 
     <div id="sonuc"></div>
 </div>
 
 <script>
-    function inputlariGuncelle() {
+    // Giriş alanlarını kategoriye göre değiştiren fonksiyon
+    function inputAyarla() {
         const kat = document.getElementById('kategori').value;
-        const tekli = document.getElementById('tekliInput');
-        const coklu = document.getElementById('cokluInput');
-        const anaInput = document.getElementById('anaInput');
+        const label = document.getElementById('inputLabel');
+        const input = document.getElementById('anaInput');
 
         if (kat === 'adsoyad') {
-            tekli.classList.add('gizli');
-            coklu.classList.remove('gizli');
+            label.innerText = "Bilgileri Girin (Ad, Soyad, İl, İlçe)";
+            input.placeholder = "Örn: Mehmet,Yılmaz,İstanbul,Kadıköy";
+        } else if (kat === 'gsmtc') {
+            label.innerText = "GSM Numarası";
+            input.placeholder = "5551234567";
         } else {
-            tekli.classList.remove('gizli');
-            coklu.classList.add('gizli');
-            anaInput.placeholder = (kat === 'gsmtc') ? "GSM No Giriniz" : "TC No Giriniz";
+            label.innerText = "TC Kimlik Numarası";
+            input.placeholder = "11 haneli TC girin...";
         }
     }
 
-    async function sorgula() {
+    async function veriyiCek() {
         const kat = document.getElementById('kategori').value;
+        const deger = document.getElementById('anaInput').value;
         const sonucDiv = document.getElementById('sonuc');
-        const btn = document.querySelector('button');
-        
-        // CORS engelini aşmak için kullanılan ücretsiz köprü (Proxy)
-        const proxy = "https://api.allorigins.win/get?url=";
-        let hedefUrl = "";
+        const btn = document.getElementById('sorguBtn');
 
-        if (kat === 'adsoyad') {
-            const ad = document.getElementById('ad').value;
-            const soyad = document.getElementById('soyad').value;
-            const il = document.getElementById('il').value;
-            const ilce = document.getElementById('ilce').value;
-            hedefUrl = `https://arastir.sbs/api/adsoyad.php?adi=${ad}&soyadi=${soyad}&il=${il}&ilce=${ilce}`;
-        } else {
-            const deger = document.getElementById('anaInput').value;
-            if (kat === 'gsm') hedefUrl = `https://arastir.sbs/api/tcgsm.php?tc=${deger}`;
-            if (kat === 'sulale') hedefUrl = `https://arastir.sbs/api/sulale.php?tc=${deger}`;
-            if (kat === 'adres') hedefUrl = `https://arastir.sbs/api/adres.php?tc=${deger}`;
-            if (kat === 'gsmtc') hedefUrl = `https://arastir.sbs/api/gsmtc.php?gsm=${deger}`;
-        }
+        if (!deger) { alert("Lütfen boş alan bırakmayın!"); return; }
 
         sonucDiv.style.display = "block";
-        sonucDiv.innerText = "Sorgulanıyor, lütfen bekleyin...";
+        sonucDiv.innerText = "Sorgulanıyor... (VPN bağlantısı kontrol ediliyor)";
         btn.disabled = true;
 
+        let apiBase = "";
+        if (kat === 'adsoyad') {
+            const p = deger.split(',');
+            apiBase = `https://arastir.sbs/api/adsoyad.php?adi=${p[0]||''}&soyadi=${p[1]||''}&il=${p[2]||''}&ilce=${p[3]||''}`;
+        } else {
+            const param = (kat === 'gsmtc') ? "gsm" : "tc";
+            const dosya = (kat === 'gsm') ? "tcgsm.php" : (kat === 'sulale') ? "sulale.php" : (kat === 'adres') ? "adres.php" : "gsmtc.php";
+            apiBase = `https://arastir.sbs/api/${dosya}?${param}=${deger}`;
+        }
+
+        // Birinci deneme: Doğrudan istek (VPN ile çalışabilir)
         try {
-            // Proxy üzerinden istek atıyoruz
-            const response = await fetch(proxy + encodeURIComponent(hedefUrl));
-            const responseData = await response.json();
-            
-            // AllOrigins veriyi 'contents' içine koyar, onu JSON'a çeviriyoruz
-            const data = JSON.parse(responseData.contents);
-            
-            if (data) {
-                sonucDiv.innerText = JSON.stringify(data, null, 2);
-            } else {
-                sonucDiv.innerText = "API boş yanıt döndürdü.";
+            const response = await fetch(apiBase);
+            const data = await response.json();
+            sonucDiv.innerText = JSON.stringify(data, null, 4);
+        } catch (err) {
+            // İkinci deneme: Proxy Köprüsü üzerinden
+            console.log("Doğrudan erişim başarısız, proxy deneniyor...");
+            try {
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiBase)}`;
+                const proxyRes = await fetch(proxyUrl);
+                const proxyJson = await proxyRes.json();
+                const finalData = JSON.parse(proxyJson.contents);
+                sonucDiv.innerText = JSON.stringify(finalData, null, 4);
+            } catch (err2) {
+                sonucDiv.innerText = "HATA: Veri çekilemedi.\n\nNedenleri:\n1. VPN açık olmayabilir.\n2. API sunucusu kapalı olabilir.\n3. Tarayıcı güvenliği bu isteği engelliyor olabilir.";
             }
-        } catch (error) {
-            sonucDiv.innerText = "Hata oluştu! API sunucusu kapalı olabilir veya hatalı sorgu yaptınız.";
-            console.error("Hata:", error);
         } finally {
             btn.disabled = false;
         }
