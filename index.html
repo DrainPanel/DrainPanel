@@ -10,7 +10,6 @@
     
     <style>
         :root {
-            /* Renk Paleti */
             --primary: #3b82f6;
             --primary-glow: rgba(59, 130, 246, 0.4);
             --bg-dark: #020617;
@@ -28,22 +27,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             overflow-x: hidden;
-            line-height: 1.6;
         }
-
-        /* --- LOADING SCREEN --- */
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.5s;
-        }
-        .spinner {
-            width: 50px; height: 50px; border: 3px solid transparent;
-            border-top-color: var(--primary); border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* --- NAVBAR --- */
         .navbar {
@@ -51,19 +35,16 @@
             backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05);
             display: flex; align-items: center; padding: 0 24px;
             position: fixed; top: 0; width: 100%; z-index: 100;
-            justify-content: space-between;
         }
-        .nav-left { display: flex; align-items: center; gap: 20px; }
-        .menu-toggle { font-size: 20px; cursor: pointer; color: var(--primary); transition: var(--transition); }
-        .menu-toggle:hover { transform: scale(1.1); }
-        .brand { font-weight: 800; font-size: 20px; letter-spacing: -1px; background: linear-gradient(to right, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .menu-toggle { font-size: 20px; cursor: pointer; color: var(--primary); margin-right: 20px; }
+        .brand { font-weight: 800; font-size: 20px; background: linear-gradient(to right, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         /* --- SIDEBAR --- */
         .sidebar {
             position: fixed; left: -280px; top: 0; width: 280px; height: 100%;
             background: var(--sidebar-bg); z-index: 200; padding: 24px;
             border-right: 1px solid rgba(59, 130, 246, 0.2); transition: var(--transition);
-            overflow-y: auto; scrollbar-width: none;
+            overflow-y: auto;
         }
         .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
         .sidebar-user { display: flex; align-items: center; gap: 15px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 24px; }
@@ -73,10 +54,6 @@
         .nav-link { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: var(--text-dim); text-decoration: none; border-radius: 12px; transition: var(--transition); margin-bottom: 4px; cursor: pointer; }
         .nav-link i { font-size: 18px; width: 24px; text-align: center; }
         .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #fff; }
-        .nav-link.active i { color: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); }
-
-        .dropdown-menu { display: none; padding-left: 20px; animation: slideDown 0.3s ease-out; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- MAIN CONTENT --- */
         .main { margin-top: 70px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
@@ -84,55 +61,36 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .welcome-box { text-align: center; margin-bottom: 40px; }
-        .welcome-box h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+        .welcome-box h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
 
-        .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; }
         
-        .input-group { margin-bottom: 20px; }
-        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; font-family: inherit; transition: var(--transition); }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px var(--primary-glow); }
+        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; font-family: inherit; margin-bottom: 15px; }
+        input:focus { border-color: var(--primary); outline: none; }
 
-        .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
+        .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer; transition: var(--transition); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
 
-        /* Ripple Effect */
-        .ripple { position: absolute; background: rgba(255,255,255,0.3); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        .result-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--primary); }
 
-        .result-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--primary); animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes cardPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; z-index: 150; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .welcome-box h1 { font-size: 24px; }
-            .card { padding: 20px; }
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 150; }
     </style>
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
-
 <nav class="navbar">
-    <div class="nav-left">
-        <i class="fas fa-bars-staggered menu-toggle" onclick="toggleSidebar()"></i>
-        <span class="brand">DRAİN  PANEL</span>
-    </div>
-    <div class="nav-right">
-        <i class="fas fa-moon" style="cursor: pointer;"></i>
-    </div>
+    <i class="fas fa-bars-staggered menu-toggle" onclick="toggleSidebar()"></i>
+    <span class="brand">DRAİN PANEL</span>
 </nav>
 
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-user">
-        <div class="avatar"><i class="fas fa-bolt"></i></div>
+        <div class="avatar"><i class="fas fa-user"></i></div>
         <div>
             <div style="font-weight: 800; font-size: 14px;">Drain Kullanıcısı</div>
-            <div style="font-size: 11px; color: var(--primary);"></div>
+            <div style="font-size: 11px; color: var(--primary);">Aktif</div>
         </div>
     </div>
 
@@ -141,25 +99,21 @@
     </div>
 
     <div class="sidebar-label">Sorgulama</div>
-    <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu')"><i class="fas fa-id-card"></i> TC'den GSM</div>
-    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu')"><i class="fas fa-phone-flip"></i> GSM'den TC</div>
-    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Filtreleme')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
-    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgu')"><i class="fas fa-location-dot"></i> Adres</div>
+    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Filtreleme')"><i class="fas fa-magnifying-glass"></i> Ad Soyad Sorgulama</div>
+    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgu')"><i class="fas fa-location-dot"></i> Adres Sorgulama</div>
+    <div class="nav-link" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')"><i class="fas fa-tree"></i> Sülale Sorgulama</div>
+    <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu')"><i class="fas fa-id-card"></i> TC'den GSM Sorgulama</div>
+    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu')"><i class="fas fa-phone-flip"></i> GSM'den TC Sorgulama</div>
 
-    <div class="sidebar-label"> Linkler </div>
-    <div class="nav-link" onclick="toggleDropdown()">
-        <i class="fas fa-share-nodes"></i> Linkler <i class="fas fa-chevron-down" id="drop-icon" style="margin-left: auto; font-size: 12px;"></i>
-    </div>
-    <div id="link-dropdown" class="dropdown-menu">
-        <a href="https://t.me/drainpaneltopluluk" target="_blank" class="nav-link"><i class="fas fa-users"></i> Telegram</a>
-    </div>
+    <div class="sidebar-label">Linkler</div>
+    <a href="https://t.me/drainpanelduyuru" target="_blank" class="nav-link"><i class="fab fa-telegram"></i> Telegram Kanalı</a>
 </aside>
 
 <main class="main">
     <div class="container" id="welcome-content">
         <div class="welcome-box">
-            <h1>Hoş Geldin, Berat</h1>
-            <p style="color: var(--text-dim);">Sorgulama işlemlerine başlamak için menüyü kullanın.</p>
+            <h1>Hoş Geldin, Drain Panel Kullanıcısı</h1>
+            <p style="color: var(--text-dim);">Sorgulama İşlemlerine Başlamak İçin Menüyü Kullanın </p>
         </div>
     </div>
 
@@ -167,27 +121,21 @@
         <div class="card">
             <h2 id="panel-title" style="margin-bottom: 24px; font-weight: 800; font-size: 22px;">Sorgu</h2>
             <div id="input-fields">
-                <input type="text" id="main-input" placeholder="Veriyi girin...">
+                <input type="text" id="main-input" placeholder="TC Girin...">
             </div>
             <div id="advanced-fields" style="display: none;">
-                <input type="text" id="fn" placeholder="Ad" style="margin-bottom: 12px;">
-                <input type="text" id="ln" placeholder="Soyad" style="margin-bottom: 12px;">
-                <input type="text" id="city" placeholder="Şehir" style="margin-bottom: 12px;">
+                <input type="text" id="fn" placeholder="Ad">
+                <input type="text" id="ln" placeholder="Soyad">
+                <input type="text" id="city" placeholder="Şehir">
                 <input type="text" id="dist" placeholder="İlçe">
             </div>
-            <button class="btn-primary" onclick="executeSorgu(event)">Sorgula</button>
+            <button class="btn-primary" onclick="executeSorgu()">Sorgula</button>
         </div>
         <div id="results"></div>
     </div>
 </main>
 
 <script>
-    // --- Sayfa Yükleme ---
-    window.addEventListener('load', () => {
-        setTimeout(() => { document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500); }, 1000);
-    });
-
     let activeEndpoint = "";
 
     function toggleSidebar() {
@@ -195,14 +143,6 @@
         const over = document.getElementById('overlay');
         side.classList.toggle('active');
         over.style.display = side.classList.contains('active') ? 'block' : 'none';
-    }
-
-    function toggleDropdown() {
-        const drop = document.getElementById('link-dropdown');
-        const icon = document.getElementById('drop-icon');
-        const isHidden = window.getComputedStyle(drop).display === 'none';
-        drop.style.display = isHidden ? 'block' : 'none';
-        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
     function showWelcome() {
@@ -222,11 +162,15 @@
         document.getElementById('input-fields').style.display = isAdvanced ? 'none' : 'block';
         document.getElementById('advanced-fields').style.display = isAdvanced ? 'block' : 'none';
         
+        // Input placeholder ayarı
+        const mainInput = document.getElementById('main-input');
+        if(endpoint.includes('gsm')) mainInput.placeholder = "GSM Girin...";
+        else mainInput.placeholder = "TC Girin...";
+        
         toggleSidebar();
     }
 
-    async function executeSorgu(e) {
-        createRipple(e);
+    async function executeSorgu() {
         const resArea = document.getElementById('results');
         resArea.innerHTML = "<div class='result-card'>Sorgulanıyor...</div>";
 
@@ -261,21 +205,6 @@
             card.innerHTML += `<div style="font-size: 13px; margin-bottom: 6px;"><b style="color: var(--primary)">${key.toUpperCase()}:</b> ${obj[key]}</div>`;
         }
         resArea.appendChild(card);
-    }
-
-    function createRipple(event) {
-        const button = event.currentTarget;
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        ripple.classList.add('ripple');
-        button.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
     }
 </script>
 
