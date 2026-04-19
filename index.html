@@ -4,302 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>DRAİN PANEL</title>
+    <title>DRAİN PANEL | ULTIMATE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg-body: #05070a;
-            --bg-sidebar: #0a0f18;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --text-gray: #94a3b8;
-            --neon-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            /* Renk Paleti */
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --bg-dark: #020617;
+            --sidebar-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: white;
-            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 3px solid transparent;
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- NAVBAR --- */
         .navbar {
-            height: 60px;
-            background: rgba(10, 15, 24, 0.8);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            position: fixed;
-            top: 0; width: 100%;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #1e293b;
+            height: 70px; background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; align-items: center; padding: 0 24px;
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            justify-content: space-between;
         }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .menu-toggle { font-size: 20px; cursor: pointer; color: var(--primary); transition: var(--transition); }
+        .menu-toggle:hover { transform: scale(1.1); }
+        .brand { font-weight: 800; font-size: 20px; letter-spacing: -1px; background: linear-gradient(to right, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .menu-btn { font-size: 24px; cursor: pointer; color: var(--accent-blue); }
-        .nav-title { margin-left: 20px; font-weight: 800; letter-spacing: 1px; }
-
+        /* --- SIDEBAR --- */
         .sidebar {
-            position: fixed;
-            left: -280px;
-            top: 0;
-            width: 280px;
-            height: 100%;
-            background: var(--bg-sidebar);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 200;
-            padding: 20px;
-            box-sizing: border-box;
-            border-right: 1px solid var(--accent-blue);
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            /* ALT TARAFIN GÖZÜKMEME SORUNUNU ÇÖZEN KISIM */
-            overflow-y: auto; 
+            position: fixed; left: -280px; top: 0; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 200; padding: 24px;
+            border-right: 1px solid rgba(59, 130, 246, 0.2); transition: var(--transition);
+            overflow-y: auto; scrollbar-width: none;
         }
+        .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.5); }
+        .sidebar-user { display: flex; align-items: center; gap: 15px; padding-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 24px; }
+        .avatar { width: 45px; height: 45px; background: var(--primary-glow); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary); border: 1px solid var(--primary); }
 
-        .sidebar.active { left: 0; }
+        .sidebar-label { font-size: 11px; color: var(--text-dim); font-weight: 800; margin: 20px 0 10px 10px; text-transform: uppercase; letter-spacing: 1.5px; }
+        .nav-link { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: var(--text-dim); text-decoration: none; border-radius: 12px; transition: var(--transition); margin-bottom: 4px; cursor: pointer; }
+        .nav-link i { font-size: 18px; width: 24px; text-align: center; }
+        .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #fff; }
+        .nav-link.active i { color: var(--primary); filter: drop-shadow(0 0 5px var(--primary)); }
 
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #1e293b;
-            margin-bottom: 20px;
-        }
+        .dropdown-menu { display: none; padding-left: 20px; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .user-icon {
-            width: 50px; height: 50px;
-            background: #1e293b;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 15px;
-            border: 1px solid var(--accent-blue);
-        }
+        /* --- MAIN CONTENT --- */
+        .main { margin-top: 70px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 600px; animation: fadeInUp 0.8s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .menu-item {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: 0.3s;
-            color: var(--text-gray);
-            margin-bottom: 5px;
-            text-decoration: none;
-        }
+        .welcome-box { text-align: center; margin-bottom: 40px; }
+        .welcome-box h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
 
-        .menu-item i { margin-right: 15px; font-size: 18px; width: 20px; text-align: center; }
-        .menu-item:hover, .menu-item.active {
-            background: rgba(59, 130, 246, 0.1);
-            color: white;
-        }
+        .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        
+        .input-group { margin-bottom: 20px; }
+        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; font-family: inherit; transition: var(--transition); }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px var(--primary-glow); }
 
-        .dropdown-container {
-            display: none;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding-left: 10px;
-        }
+        .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer; transition: var(--transition); position: relative; overflow: hidden; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
 
-        .close-sidebar { position: absolute; right: 20px; top: 20px; cursor: pointer; font-size: 20px; color: var(--text-gray); }
+        /* Ripple Effect */
+        .ripple { position: absolute; background: rgba(255,255,255,0.3); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-        .main-content { margin-top: 80px; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .result-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--primary); animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes cardPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        .welcome-screen { text-align: center; padding: 40px; }
-        .welcome-screen h2 {
-            font-size: 28px;
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; z-index: 150; }
 
-        .sorgu-panel {
-            background: #0f172a; padding: 30px; border-radius: 20px;
-            width: 100%; max-width: 500px; border: 1px solid #1e293b;
-            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        input {
-            width: 100%; padding: 14px; margin-bottom: 15px;
-            background: #05070a; border: 1px solid #1e293b;
-            border-radius: 10px; color: white; box-sizing: border-box;
-        }
-
-        button {
-            width: 100%; padding: 15px;
-            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple));
-            border: none; border-radius: 10px; color: white; font-weight: 800; cursor: pointer;
-        }
-
-        .res-card {
-            background: #1e293b; padding: 15px; border-radius: 12px;
-            margin-bottom: 10px; border-left: 4px solid var(--accent-blue); width: 100%; max-width: 500px;
-        }
-
-        .overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.7); display:none; z-index:150;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .welcome-box h1 { font-size: 24px; }
+            .card { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <i class="fas fa-bars menu-btn" onclick="toggleSidebar()"></i>
-    <span class="nav-title">DRAİN PANEL</span>
-</div>
+<div id="loader"><div class="spinner"></div></div>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <i class="fas fa-bars-staggered menu-toggle" onclick="toggleSidebar()"></i>
+        <span class="brand">DRAİN PANEL</span>
+    </div>
+    <div class="nav-right">
+        <i class="fas fa-moon" style="cursor: pointer;"></i>
+    </div>
+</nav>
 
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<div class="sidebar" id="sidebar">
-    <i class="fas fa-times close-sidebar" onclick="toggleSidebar()"></i>
-    <div class="sidebar-header">
-        <div class="user-icon"><i class="fas fa-user"></i></div>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-user">
+        <div class="avatar"><i class="fas fa-bolt"></i></div>
         <div>
-            <div style="font-weight: bold; font-size: 14px;">Drain Kullanıcısı</div>
-            <div style="font-size: 11px; color: var(--accent-blue);">Aktif Bağlantı</div>
+            <div style="font-weight: 800; font-size: 14px;">Berat Bilek</div>
+            <div style="font-size: 11px; color: var(--primary);">Developer Mode</div>
         </div>
     </div>
-    
-    <div class="sidebar-menu">
-        <div class="menu-item active" onclick="showWelcome()">
-            <i class="fas fa-home"></i> Ana Sayfa
-        </div>
 
-        <div style="font-size: 11px; color: #475569; margin: 15px 0 10px 10px; font-weight: bold;">SORGULAR</div>
-        <div class="menu-item" onclick="openPanel('tcgsm.php?tc=', 'TC Sorgu')">
-            <i class="fas fa-id-card"></i> TC'den GSM
-        </div>
-        <div class="menu-item" onclick="openPanel('gsmtc.php?gsm=', 'GSM Sorgu')">
-            <i class="fas fa-mobile-alt"></i> GSM'den TC
-        </div>
-        <div class="menu-item" onclick="openPanel('adsoyad', 'Ad Soyad Sorgu')">
-            <i class="fas fa-users"></i> Ad Soyad
-        </div>
-        <div class="menu-item" onclick="openPanel('adres.php?tc=', 'Adres Sorgu')">
-            <i class="fas fa-map-marker-alt"></i> Adres Sorgu
-        </div>
-        <div class="menu-item" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')">
-            <i class="fas fa-tree"></i> Sülale Sorgu
-        </div>
-
-        <div style="font-size: 11px; color: #475569; margin: 15px 0 10px 10px; font-weight: bold;">SOSYAL</div>
-        <div class="menu-item" onclick="toggleDropdown()" style="justify-content: space-between;">
-            <span><i class="fas fa-link"></i> Linkler</span>
-            <i class="fas fa-chevron-down" id="drop-icon" style="font-size: 12px; transition: 0.3s;"></i>
-        </div>
-        <div id="link-dropdown" class="dropdown-container">
-            <a href="https://t.me/SorguuuPanellBot" target="_blank" class="menu-item" style="font-size: 13px;">
-                <i class="fab fa-telegram"></i> Sorgu Botu
-            </a>
-            <a href="https://t.me/drainpaneltopluluk" target="_blank" class="menu-item" style="font-size: 13px;">
-                <i class="fas fa-users"></i> Topluluk
-            </a>
-            <a href="https://t.me/drainpanel" target="_blank" class="menu-item" style="font-size: 13px;">
-                <i class="fas fa-user-tie"></i> İletişim
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="main-content">
-    <div id="welcome" class="welcome-screen">
-        <h2>Drain Panele Hoş Geldiniz</h2>
-        <p style="color: var(--text-gray);">Sol üstteki menüden bir işlem seçerek başlayın.</p>
+    <div class="nav-link active" onclick="showWelcome()">
+        <i class="fas fa-house-chimney"></i> Ana Sayfa
     </div>
 
-    <div id="panel" class="sorgu-panel">
-        <h3 id="panel-title" style="margin-top: 0; color: var(--accent-blue);">Sorgu Paneli</h3>
-        <div id="standard-inputs">
-            <input type="text" id="main-val" placeholder="Sorgu verisini girin...">
+    <div class="sidebar-label">Sorgulama</div>
+    <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu')"><i class="fas fa-id-card"></i> TC'den GSM</div>
+    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu')"><i class="fas fa-phone-flip"></i> GSM'den TC</div>
+    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Filtreleme')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
+    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgu')"><i class="fas fa-location-dot"></i> Adres</div>
+
+    <div class="sidebar-label">Sosyal & Destek</div>
+    <div class="nav-link" onclick="toggleDropdown()">
+        <i class="fas fa-share-nodes"></i> Linkler <i class="fas fa-chevron-down" id="drop-icon" style="margin-left: auto; font-size: 12px;"></i>
+    </div>
+    <div id="link-dropdown" class="dropdown-menu">
+        <a href="https://t.me/SorguuuPanellBot" target="_blank" class="nav-link"><i class="fab fa-telegram"></i> Bot</a>
+        <a href="https://t.me/drainpaneltopluluk" target="_blank" class="nav-link"><i class="fas fa-users"></i> Topluluk</a>
+        <a href="https://t.me/drainpanel" target="_blank" class="nav-link"><i class="fas fa-user-tie"></i> İletişim</a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="container" id="welcome-content">
+        <div class="welcome-box">
+            <h1>Hoş Geldin, Berat</h1>
+            <p style="color: var(--text-dim);">Sorgulama işlemlerine başlamak için menüyü kullanın.</p>
         </div>
-        <div id="name-inputs" style="display: none;">
-            <input type="text" id="fn" placeholder="Ad">
-            <input type="text" id="ln" placeholder="Soyad">
-            <input type="text" id="city" placeholder="İl">
-            <input type="text" id="dist" placeholder="İlçe">
-        </div>
-        <button onclick="startSorgu()">Sorgula</button>
     </div>
 
-    <div id="result-area"></div>
-</div>
+    <div class="container" id="search-panel" style="display: none;">
+        <div class="card">
+            <h2 id="panel-title" style="margin-bottom: 24px; font-weight: 800; font-size: 22px;">Sorgu</h2>
+            <div id="input-fields">
+                <input type="text" id="main-input" placeholder="Veriyi girin...">
+            </div>
+            <div id="advanced-fields" style="display: none;">
+                <input type="text" id="fn" placeholder="Ad" style="margin-bottom: 12px;">
+                <input type="text" id="ln" placeholder="Soyad" style="margin-bottom: 12px;">
+                <input type="text" id="city" placeholder="Şehir" style="margin-bottom: 12px;">
+                <input type="text" id="dist" placeholder="İlçe">
+            </div>
+            <button class="btn-primary" onclick="executeSorgu(event)">Sorgula</button>
+        </div>
+        <div id="results"></div>
+    </div>
+</main>
 
 <script>
-    let currentEndpoint = "";
+    // --- Sayfa Yükleme ---
+    window.addEventListener('load', () => {
+        setTimeout(() => { document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500); }, 1000);
+    });
+
+    let activeEndpoint = "";
 
     function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
-        const overlay = document.getElementById('overlay');
-        overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+        const side = document.getElementById('sidebar');
+        const over = document.getElementById('overlay');
+        side.classList.toggle('active');
+        over.style.display = side.classList.contains('active') ? 'block' : 'none';
     }
 
     function toggleDropdown() {
         const drop = document.getElementById('link-dropdown');
         const icon = document.getElementById('drop-icon');
-        const isOpen = drop.style.display === "block";
-        drop.style.display = isOpen ? "none" : "block";
-        icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+        const isHidden = window.getComputedStyle(drop).display === 'none';
+        drop.style.display = isHidden ? 'block' : 'none';
+        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
     }
 
     function showWelcome() {
-        document.getElementById('welcome').style.display = 'block';
-        document.getElementById('panel').style.display = 'none';
-        document.getElementById('result-area').innerHTML = "";
+        document.getElementById('welcome-content').style.display = 'block';
+        document.getElementById('search-panel').style.display = 'none';
         toggleSidebar();
     }
 
     function openPanel(endpoint, title) {
-        currentEndpoint = endpoint;
-        document.getElementById('welcome').style.display = 'none';
-        document.getElementById('panel').style.display = 'block';
+        activeEndpoint = endpoint;
+        document.getElementById('welcome-content').style.display = 'none';
+        document.getElementById('search-panel').style.display = 'block';
         document.getElementById('panel-title').innerText = title;
-        document.getElementById('result-area').innerHTML = "";
-
-        if(endpoint === 'adsoyad') {
-            document.getElementById('standard-inputs').style.display = 'none';
-            document.getElementById('name-inputs').style.display = 'block';
-        } else {
-            document.getElementById('standard-inputs').style.display = 'block';
-            document.getElementById('name-inputs').style.display = 'none';
-        }
+        document.getElementById('results').innerHTML = "";
+        
+        const isAdvanced = endpoint === 'adsoyad';
+        document.getElementById('input-fields').style.display = isAdvanced ? 'none' : 'block';
+        document.getElementById('advanced-fields').style.display = isAdvanced ? 'block' : 'none';
+        
         toggleSidebar();
     }
 
-    async function startSorgu() {
-        const resultArea = document.getElementById('result-area');
-        resultArea.innerHTML = "<p style='text-align:center;'>Sorgulanıyor...</p>";
+    async function executeSorgu(e) {
+        createRipple(e);
+        const resArea = document.getElementById('results');
+        resArea.innerHTML = "<div class='result-card'>Sorgulanıyor...</div>";
+
         let url = "";
-        if(currentEndpoint === 'adsoyad') {
+        if(activeEndpoint === 'adsoyad') {
             url = `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fn').value}&soyadi=${document.getElementById('ln').value}&il=${document.getElementById('city').value}&ilce=${document.getElementById('dist').value}`;
         } else {
-            url = `https://arastir.sbs/api/${currentEndpoint}${document.getElementById('main-val').value}`;
+            url = `https://arastir.sbs/api/${activeEndpoint}${document.getElementById('main-input').value}`;
         }
+
         try {
             const proxy = "https://corsproxy.io/?" + encodeURIComponent(url);
-            const res = await fetch(proxy);
-            const raw = await res.text();
+            const response = await fetch(proxy);
+            const raw = await response.text();
             let data = JSON.parse(raw);
             if(data.data) data = data.data;
-            resultArea.innerHTML = "";
-            if(Array.isArray(data)) data.forEach(item => renderCard(item));
-            else renderCard(data);
-        } catch(e) {
-            resultArea.innerHTML = "<p style='color:red; text-align:center;'>Hata! VPN durumunu kontrol edin.</p>";
+
+            resArea.innerHTML = "";
+            if(Array.isArray(data)) data.forEach(item => renderItem(item));
+            else renderItem(data);
+        } catch(err) {
+            resArea.innerHTML = "<div class='result-card' style='border-color: #ef4444;'>Bağlantı hatası! VPN kontrol edin.</div>";
         }
     }
 
-    function renderCard(obj) {
-        const area = document.getElementById('result-area');
+    function renderItem(obj) {
+        const resArea = document.getElementById('results');
         const card = document.createElement('div');
-        card.className = "res-card";
-        for(let k in obj) {
-            if(["success","message","status"].includes(k.toLowerCase()) || !obj[k]) continue;
-            card.innerHTML += `<div style="font-size:13px; margin-bottom:5px;"><b style="color:var(--accent-blue)">${k.replace(/_/g,' ').toUpperCase()}:</b> ${obj[k]}</div>`;
+        card.className = "result-card";
+        for(let key in obj) {
+            if(["success","message","status"].includes(key.toLowerCase()) || !obj[key]) continue;
+            card.innerHTML += `<div style="font-size: 13px; margin-bottom: 6px;"><b style="color: var(--primary)">${key.toUpperCase()}:</b> ${obj[key]}</div>`;
         }
-        area.appendChild(card);
+        resArea.appendChild(card);
+    }
+
+    function createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.classList.add('ripple');
+        button.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
     }
 </script>
+
 </body>
 </html>
