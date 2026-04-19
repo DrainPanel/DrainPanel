@@ -33,7 +33,7 @@
             overflow-x: hidden;
         }
 
-        /* --- AUTH & LOCK EKRANLARI --- */
+        /* --- EKRAN SIRALAMASI --- */
         #auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark); z-index: 100001;
@@ -45,6 +45,7 @@
             background: var(--bg-dark); z-index: 99999;
             display: none; justify-content: center; align-items: center; padding: 20px;
         }
+
         .lock-card {
             background: var(--sidebar-bg); border: 1px solid var(--primary);
             border-radius: 24px; padding: 32px; text-align: center; max-width: 400px;
@@ -75,11 +76,11 @@
         .nav-link { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: var(--text-dim); text-decoration: none; border-radius: 12px; transition: var(--transition); margin-bottom: 4px; cursor: pointer; }
         .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #fff; }
 
-        /* --- İÇERİK --- */
-        .main { margin-top: 90px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        /* --- FORM & ANA ALAN --- */
+        .main { margin-top: 100px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .container { width: 100%; max-width: 600px; animation: fadeInUp 0.8s ease-out; }
         .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; }
-        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; margin-bottom: 15px; }
+        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; margin-bottom: 15px; font-family: inherit; }
         .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer; transition: var(--transition); }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 150; }
         .result-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--primary); }
@@ -91,8 +92,8 @@
 
 <div id="auth-screen">
     <div class="lock-card" style="width: 350px;">
-        <h2>Drain Panel</h2>
-        <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 13px;">Giriş yapın.</p>
+        <h2 style="margin-bottom: 10px;">Drain Panel</h2>
+        <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 13px;">Giriş yaparak devam edin.</p>
         <input type="email" id="auth-email" placeholder="E-posta">
         <input type="password" id="auth-pass" placeholder="Şifre">
         <button class="btn-primary" onclick="login()" style="margin-bottom: 10px;">Giriş Yap</button>
@@ -103,8 +104,8 @@
 <div id="join-lock">
     <div class="lock-card">
         <i class="fab fa-telegram" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
-        <h2>Doğrulama</h2>
-        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 24px;">Kanala katılmanız gerekmektedir.</p>
+        <h2>Kanal Onayı</h2>
+        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 24px;">Lütfen duyuru kanalımıza katıldığınızdan emin olun.</p>
         <a href="https://t.me/drainpanelduyuru" target="_blank" onclick="enableVerifyBtn()" class="btn-primary" style="text-decoration: none; display: block; margin-bottom: 12px;">1. Kanala Katıl</a>
         <button id="verify-btn" onclick="unlockPanel()" disabled style="opacity: 0.5; background: #1e293b;" class="btn-primary">2. Katıldım, Paneli Aç</button>
     </div>
@@ -123,21 +124,22 @@
         <div>
             <div id="user-email-display" style="font-weight: 800; font-size: 11px; word-break: break-all;">Yükleniyor...</div>
             <div style="font-size: 10px; color: var(--primary);">
-                Aktif • <span id="active-count">1</span> | Toplam • <span id="total-count">0</span>
+                Aktif: <span id="active-count">1</span> | Toplam: <span id="total-count">0</span>
             </div>
         </div>
     </div>
     
     <div class="nav-link active" onclick="showWelcome()"><i class="fas fa-house-chimney"></i> Ana Sayfa</div>
     
-    <div class="sidebar-label">SORGULAR</div>
-    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Sorgu')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
-    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgu')"><i class="fas fa-location-dot"></i> Adres Sorgu</div>
+    <div class="sidebar-label">Sorgulamalar</div>
+    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Sorgulama')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
+    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgulama')"><i class="fas fa-location-dot"></i> Adres Sorgu</div>
     <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu')"><i class="fas fa-id-card"></i> TC'den GSM</div>
+    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu')"><i class="fas fa-phone"></i> GSM'den TC</div>
     <div class="nav-link" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')"><i class="fas fa-users"></i> Sülale Sorgu</div>
     
-    <div class="sidebar-label">LİNKLER</div>
-    <a href="https://t.me/drainpanelduyuru" target="_blank" class="nav-link" style="color: #0088cc;"><i class="fab fa-telegram"></i> Duyuru Kanalı</a>
+    <div class="sidebar-label">Duyuru</div>
+    <a href="https://t.me/drainpanelduyuru" target="_blank" class="nav-link" style="color: #0088cc;"><i class="fab fa-telegram"></i> Telegram Kanalı</a>
     
     <div class="nav-link" onclick="logout()" style="margin-top: 20px; color: #ef4444;"><i class="fas fa-right-from-bracket"></i> Çıkış Yap</div>
 </aside>
@@ -146,14 +148,14 @@
     <div class="container" id="welcome-content">
         <div style="text-align: center;">
             <h1 id="welcome-title">Hoş Geldin!</h1>
-            <p style="color: var(--text-dim); margin-top: 10px;">Sorgulama yapmak için yan menüyü kullanın.</p>
+            <p style="color: var(--text-dim); margin-top: 15px;">İşlem yapmak için sol menüdeki sorgu araçlarını kullanabilirsin.</p>
         </div>
     </div>
 
     <div class="container" id="search-panel" style="display: none;">
         <div class="card">
             <h2 id="panel-title" style="margin-bottom: 24px;">Sorgu</h2>
-            <div id="input-fields"><input type="text" id="main-input" placeholder="Veri Girin..."></div>
+            <div id="input-fields"><input type="text" id="main-input" placeholder="Bilgiyi girin..."></div>
             <div id="advanced-fields" style="display: none;">
                 <input type="text" id="fn" placeholder="Ad">
                 <input type="text" id="ln" placeholder="Soyad">
@@ -182,32 +184,38 @@
     const db = firebase.firestore();
 
     auth.onAuthStateChanged((user) => {
+        const authScr = document.getElementById('auth-screen');
+        const lockScr = document.getElementById('join-lock');
+
         if (user) {
-            document.getElementById('auth-screen').style.display = 'none';
+            authScr.style.display = 'none';
             document.getElementById('user-email-display').innerText = user.email;
             document.getElementById('welcome-title').innerText = "Hoş Geldin, " + user.email.split('@')[0] + "!";
+            
             if(localStorage.getItem('drain_verified') !== 'true') {
-                document.getElementById('join-lock').style.display = 'flex';
+                lockScr.style.display = 'flex';
+            } else {
+                lockScr.style.display = 'none';
             }
-            getStats();
+            updateStats();
         } else {
-            document.getElementById('auth-screen').style.display = 'flex';
-            document.getElementById('join-lock').style.display = 'none';
+            authScr.style.display = 'flex';
+            lockScr.style.display = 'none';
         }
     });
 
-    async function getStats() {
+    async function updateStats() {
         try {
             const snap = await db.collection("users").get();
             document.getElementById('total-count').innerText = snap.size;
-            document.getElementById('active-count').innerText = Math.floor(Math.random() * 8) + 1;
+            document.getElementById('active-count').innerText = Math.floor(Math.random() * 6) + 1;
         } catch(e) {}
     }
 
     async function login() {
         const e = document.getElementById('auth-email').value;
         const p = document.getElementById('auth-pass').value;
-        try { await auth.signInWithEmailAndPassword(e, p); } catch(e) { alert("Hata!"); }
+        try { await auth.signInWithEmailAndPassword(e, p); } catch(e) { alert("Giriş bilgileri hatalı!"); }
     }
 
     async function register() {
@@ -225,8 +233,8 @@
     let clickedJoin = false;
     function enableVerifyBtn() {
         clickedJoin = true;
-        const b = document.getElementById('verify-btn');
-        b.disabled = false; b.style.opacity = "1"; b.style.background = "#10b981";
+        const btn = document.getElementById('verify-btn');
+        btn.disabled = false; btn.style.opacity = "1"; btn.style.background = "#10b981"; btn.style.cursor = "pointer";
     }
     function unlockPanel() {
         if(clickedJoin) {
@@ -258,7 +266,7 @@
 
     async function executeSorgu() {
         const resArea = document.getElementById('results');
-        resArea.innerHTML = "<div class='result-card'>Sorgulanıyor...</div>";
+        resArea.innerHTML = "<div class='result-card'>Sorgulanıyor... Lütfen bekleyin.</div>";
         let val = document.getElementById('main-input').value;
         let url = activeEndpoint === 'adsoyad' ? 
             `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fn').value}&soyadi=${document.getElementById('ln').value}&il=${document.getElementById('city').value}` :
@@ -270,18 +278,18 @@
             resArea.innerHTML = "";
             if(Array.isArray(f)) f.forEach(i => renderItem(i));
             else renderItem(f);
-        } catch(e) { resArea.innerHTML = "<div class='result-card' style='border-color: red;'>Hata!</div>"; }
+        } catch(e) { resArea.innerHTML = "<div class='result-card' style='border-color: #ef4444;'>Hata oluştu veya sonuç bulunamadı.</div>"; }
     }
 
     function renderItem(obj) {
         const card = document.createElement('div'); card.className = "result-card";
-        let has = false;
+        let hasData = false;
         for(let k in obj) {
             if(["success","message"].includes(k) || !obj[k]) continue;
-            has = true;
+            hasData = true;
             card.innerHTML += `<div style="font-size:12px; margin-bottom:4px;"><b>${k.toUpperCase()}:</b> ${obj[k]}</div>`;
         }
-        if(!has) card.innerHTML = "Sonuç yok.";
+        if(!hasData) card.innerHTML = "Eşleşen kayıt bulunamadı.";
         document.getElementById('results').appendChild(card);
     }
 </script>
