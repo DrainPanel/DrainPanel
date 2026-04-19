@@ -25,26 +25,14 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-        }
-
-        /* --- EKRAN SIRALAMASI --- */
-        #auth-screen {
+        #auth-screen, #join-lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark); z-index: 100001;
             display: none; justify-content: center; align-items: center; padding: 20px;
         }
-
-        #join-lock {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark); z-index: 99999;
-            display: none; justify-content: center; align-items: center; padding: 20px;
-        }
+        #join-lock { z-index: 99999; }
 
         .lock-card {
             background: var(--sidebar-bg); border: 1px solid var(--primary);
@@ -52,7 +40,6 @@
             box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
         }
 
-        /* --- NAVBAR & SIDEBAR --- */
         .navbar {
             height: 70px; background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -76,11 +63,11 @@
         .nav-link { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: var(--text-dim); text-decoration: none; border-radius: 12px; transition: var(--transition); margin-bottom: 4px; cursor: pointer; }
         .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #fff; }
 
-        /* --- FORM & ANA ALAN --- */
         .main { margin-top: 100px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .container { width: 100%; max-width: 600px; animation: fadeInUp 0.8s ease-out; }
         .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 32px; }
-        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; margin-bottom: 15px; font-family: inherit; }
+        input { width: 100%; padding: 16px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; margin-bottom: 15px; font-family: inherit; outline: none; }
+        input:focus { border-color: var(--primary); }
         .btn-primary { width: 100%; padding: 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border: none; border-radius: 14px; color: #fff; font-weight: 700; cursor: pointer; transition: var(--transition); }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 150; }
         .result-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 20px; margin-top: 20px; border-left: 4px solid var(--primary); }
@@ -92,8 +79,7 @@
 
 <div id="auth-screen">
     <div class="lock-card" style="width: 350px;">
-        <h2 style="margin-bottom: 10px;">Drain Panel</h2>
-        <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 13px;">Giriş yaparak devam edin.</p>
+        <h2>Drain Panel</h2>
         <input type="email" id="auth-email" placeholder="E-posta">
         <input type="password" id="auth-pass" placeholder="Şifre">
         <button class="btn-primary" onclick="login()" style="margin-bottom: 10px;">Giriş Yap</button>
@@ -105,7 +91,7 @@
     <div class="lock-card">
         <i class="fab fa-telegram" style="font-size: 50px; color: var(--primary); margin-bottom: 20px;"></i>
         <h2>Kanal Onayı</h2>
-        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 24px;">Lütfen duyuru kanalımıza katıldığınızdan emin olun.</p>
+        <p style="color: var(--text-dim); font-size: 14px; margin-bottom: 24px;">Lütfen duyuru kanalımıza katılın.</p>
         <a href="https://t.me/drainpanelduyuru" target="_blank" onclick="enableVerifyBtn()" class="btn-primary" style="text-decoration: none; display: block; margin-bottom: 12px;">1. Kanala Katıl</a>
         <button id="verify-btn" onclick="unlockPanel()" disabled style="opacity: 0.5; background: #1e293b;" class="btn-primary">2. Katıldım, Paneli Aç</button>
     </div>
@@ -123,23 +109,20 @@
         <div class="avatar"><i class="fas fa-user"></i></div>
         <div>
             <div id="user-email-display" style="font-weight: 800; font-size: 11px; word-break: break-all;">Yükleniyor...</div>
-            <div style="font-size: 10px; color: var(--primary);">
-                Aktif: <span id="active-count">1</span> | Toplam: <span id="total-count">0</span>
-            </div>
         </div>
     </div>
     
     <div class="nav-link active" onclick="showWelcome()"><i class="fas fa-house-chimney"></i> Ana Sayfa</div>
     
     <div class="sidebar-label">Sorgulamalar</div>
-    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Sorgulama')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
-    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgulama')"><i class="fas fa-location-dot"></i> Adres Sorgu</div>
-    <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu')"><i class="fas fa-id-card"></i> TC'den GSM</div>
-    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu')"><i class="fas fa-phone"></i> GSM'den TC</div>
-    <div class="nav-link" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu')"><i class="fas fa-users"></i> Sülale Sorgu</div>
+    <div class="nav-link" onclick="openPanel('adsoyad', 'Ad Soyad Sorgulama', 'Ad Girin...')"><i class="fas fa-magnifying-glass"></i> Ad Soyad</div>
+    <div class="nav-link" onclick="openPanel('adres.php?tc=', 'Adres Sorgulama', 'TC Girin...')"><i class="fas fa-location-dot"></i> Adres Sorgu</div>
+    <div class="nav-link" onclick="openPanel('tcgsm.php?tc=', 'TC -> GSM Sorgu', 'TC Girin...')"><i class="fas fa-id-card"></i> TC'den GSM</div>
+    <div class="nav-link" onclick="openPanel('gsmtc.php?gsm=', 'GSM -> TC Sorgu', 'GSM Girin...')"><i class="fas fa-phone"></i> GSM'den TC</div>
+    <div class="nav-link" onclick="openPanel('sulale.php?tc=', 'Sülale Sorgu', 'TC Girin...')"><i class="fas fa-users"></i> Sülale Sorgu</div>
     
-    <div class="sidebar-label">Duyuru</div>
-    <a href="https://t.me/drainpanelduyuru" target="_blank" class="nav-link" style="color: #0088cc;"><i class="fab fa-telegram"></i> Telegram Kanalı</a>
+    <div class="sidebar-label">LİNKLER</div>
+    <a href="https://t.me/drainpanelduyuru" target="_blank" class="nav-link" style="color: #0088cc;"><i class="fab fa-telegram"></i> Telegram</a>
     
     <div class="nav-link" onclick="logout()" style="margin-top: 20px; color: #ef4444;"><i class="fas fa-right-from-bracket"></i> Çıkış Yap</div>
 </aside>
@@ -148,18 +131,19 @@
     <div class="container" id="welcome-content">
         <div style="text-align: center;">
             <h1 id="welcome-title">Hoş Geldin!</h1>
-            <p style="color: var(--text-dim); margin-top: 15px;">İşlem yapmak için sol menüdeki sorgu araçlarını kullanabilirsin.</p>
+            <p style="color: var(--text-dim); margin-top: 15px;">İşlem yapmak için sol menüdeki araçları kullanabilirsin.</p>
         </div>
     </div>
 
     <div class="container" id="search-panel" style="display: none;">
         <div class="card">
             <h2 id="panel-title" style="margin-bottom: 24px;">Sorgu</h2>
-            <div id="input-fields"><input type="text" id="main-input" placeholder="Bilgiyi girin..."></div>
+            <div id="input-fields"><input type="text" id="main-input" placeholder="TC Girin..."></div>
             <div id="advanced-fields" style="display: none;">
                 <input type="text" id="fn" placeholder="Ad">
                 <input type="text" id="ln" placeholder="Soyad">
                 <input type="text" id="city" placeholder="Şehir">
+                <input type="text" id="district" placeholder="İlçe">
             </div>
             <button class="btn-primary" onclick="executeSorgu()">Sorgula</button>
         </div>
@@ -184,38 +168,21 @@
     const db = firebase.firestore();
 
     auth.onAuthStateChanged((user) => {
-        const authScr = document.getElementById('auth-screen');
-        const lockScr = document.getElementById('join-lock');
-
         if (user) {
-            authScr.style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('user-email-display').innerText = user.email;
             document.getElementById('welcome-title').innerText = "Hoş Geldin, " + user.email.split('@')[0] + "!";
-            
-            if(localStorage.getItem('drain_verified') !== 'true') {
-                lockScr.style.display = 'flex';
-            } else {
-                lockScr.style.display = 'none';
-            }
-            updateStats();
+            if(localStorage.getItem('drain_verified') !== 'true') document.getElementById('join-lock').style.display = 'flex';
         } else {
-            authScr.style.display = 'flex';
-            lockScr.style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('join-lock').style.display = 'none';
         }
     });
-
-    async function updateStats() {
-        try {
-            const snap = await db.collection("users").get();
-            document.getElementById('total-count').innerText = snap.size;
-            document.getElementById('active-count').innerText = Math.floor(Math.random() * 6) + 1;
-        } catch(e) {}
-    }
 
     async function login() {
         const e = document.getElementById('auth-email').value;
         const p = document.getElementById('auth-pass').value;
-        try { await auth.signInWithEmailAndPassword(e, p); } catch(e) { alert("Giriş bilgileri hatalı!"); }
+        try { await auth.signInWithEmailAndPassword(e, p); } catch(e) { alert("Hata!"); }
     }
 
     async function register() {
@@ -234,7 +201,7 @@
     function enableVerifyBtn() {
         clickedJoin = true;
         const btn = document.getElementById('verify-btn');
-        btn.disabled = false; btn.style.opacity = "1"; btn.style.background = "#10b981"; btn.style.cursor = "pointer";
+        btn.disabled = false; btn.style.opacity = "1"; btn.style.background = "#10b981";
     }
     function unlockPanel() {
         if(clickedJoin) {
@@ -254,11 +221,14 @@
         document.getElementById('search-panel').style.display = 'none';
         toggleSidebar();
     }
-    function openPanel(endpoint, title) {
+    function openPanel(endpoint, title, placeholderText) {
         activeEndpoint = endpoint;
         document.getElementById('welcome-content').style.display = 'none';
         document.getElementById('search-panel').style.display = 'block';
         document.getElementById('panel-title').innerText = title;
+        document.getElementById('main-input').placeholder = placeholderText;
+        document.getElementById('results').innerHTML = ""; // Eski sorguyu temizle
+        
         document.getElementById('input-fields').style.display = endpoint === 'adsoyad' ? 'none' : 'block';
         document.getElementById('advanced-fields').style.display = endpoint === 'adsoyad' ? 'block' : 'none';
         toggleSidebar();
@@ -266,30 +236,31 @@
 
     async function executeSorgu() {
         const resArea = document.getElementById('results');
-        resArea.innerHTML = "<div class='result-card'>Sorgulanıyor... Lütfen bekleyin.</div>";
-        let val = document.getElementById('main-input').value;
+        resArea.innerHTML = "<div class='result-card'>Sorgulanıyor...</div>";
+        
         let url = activeEndpoint === 'adsoyad' ? 
-            `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fn').value}&soyadi=${document.getElementById('ln').value}&il=${document.getElementById('city').value}` :
-            `https://arastir.sbs/api/${activeEndpoint}${val}`;
+            `https://arastir.sbs/api/adsoyad.php?adi=${document.getElementById('fn').value}&soyadi=${document.getElementById('ln').value}&il=${document.getElementById('city').value}&ilce=${document.getElementById('district').value}` :
+            `https://arastir.sbs/api/${activeEndpoint}${document.getElementById('main-input').value}`;
+        
         try {
             const r = await fetch("https://corsproxy.io/?" + encodeURIComponent(url));
             const d = await r.json();
             const f = d.data || d;
-            resArea.innerHTML = "";
+            resArea.innerHTML = ""; // Sonuç gelince "Sorgulanıyor" yazısını temizle
             if(Array.isArray(f)) f.forEach(i => renderItem(i));
             else renderItem(f);
-        } catch(e) { resArea.innerHTML = "<div class='result-card' style='border-color: #ef4444;'>Hata oluştu veya sonuç bulunamadı.</div>"; }
+        } catch(e) { resArea.innerHTML = "<div class='result-card' style='border-color: red;'>Hata oluştu!</div>"; }
     }
 
     function renderItem(obj) {
         const card = document.createElement('div'); card.className = "result-card";
-        let hasData = false;
+        let has = false;
         for(let k in obj) {
             if(["success","message"].includes(k) || !obj[k]) continue;
-            hasData = true;
+            has = true;
             card.innerHTML += `<div style="font-size:12px; margin-bottom:4px;"><b>${k.toUpperCase()}:</b> ${obj[k]}</div>`;
         }
-        if(!hasData) card.innerHTML = "Eşleşen kayıt bulunamadı.";
+        if(!has) card.innerHTML = "Sonuç bulunamadı.";
         document.getElementById('results').appendChild(card);
     }
 </script>
