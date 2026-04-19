@@ -4,163 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DRAİN SORGU PANELİ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Genel Stil Düzeltmeleri */
+        :root {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --accent-color: #0088cc;
+            --text-color: #ffffff;
+            --success-color: #00ff00;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
         }
 
-        /* Sayfa Yüklenirken Boş Gözükmemesi İçin Ana Konteyner */
-        #app-container > div {
-            display: none; /* Başlangıçta her şeyi gizle, JS ile sırayla açacağız */
+        /* Başlangıçta her şeyi gizle */
+        #auth-screen, #telegram-screen, #main-layout {
+            display: none;
         }
 
-        /* Hoş Geldin Yazısının Görünmesi İçin Boşluk */
-        #main-content {
-            padding: 80px 20px 20px 20px; /* Üstten 80px boşluk bırakıldı */
-            text-align: center;
-        }
-
-        /* İstatistik Kartları */
-        .stats-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 12px;
-            min-width: 150px;
-            border: 1px solid #333;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-
-        .stat-card h3 {
-            margin: 0;
-            font-size: 14px;
-            color: #aaa;
-            text-transform: uppercase;
-        }
-
-        .stat-card p {
-            margin: 10px 0 0;
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ff00;
-        }
-
-        /* Auth ve Telegram Ekranları */
+        /* Giriş ve Telegram Ekranları */
         .centered-screen {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: var(--secondary-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #252525;
+            color: white;
         }
 
         .btn-primary {
-            background-color: #0088cc;
+            background-color: var(--accent-color);
             color: white;
-            padding: 12px 24px;
+            padding: 12px 25px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
             font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        /* Layout ve Sidebar */
+        #main-layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--secondary-bg);
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid #333;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-links li a {
+            display: block;
+            padding: 15px 20px;
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .nav-links li a:hover {
+            background: #252525;
+            color: var(--accent-color);
+        }
+
+        /* Ana İçerik */
+        .content {
+            margin-left: 250px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid #333;
+        }
+
+        .stat-card p {
+            font-size: 28px;
+            color: var(--success-color);
+            margin: 5px 0;
+        }
+
+        .query-section {
+            display: none;
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 0; display: none; }
+            .content { margin-left: 0; padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="app-container">
-        <div id="auth-screen" class="centered-screen">
-            <h2>DRAİN PANEL - Giriş Yap</h2>
+    <div id="auth-screen" class="centered-screen">
+        <div class="auth-box">
+            <h2>DRAİN PANEL</h2>
+            <p>Devam etmek için giriş yapın</p>
             <input type="email" id="email" placeholder="E-posta">
             <input type="password" id="password" placeholder="Şifre">
-            <button onclick="login()" class="btn-primary" style="margin-top:10px;">Giriş Yap / Kayıt Ol</button>
+            <button onclick="login()" class="btn-primary">Giriş Yap / Kayıt Ol</button>
+        </div>
+    </div>
+
+    <div id="telegram-screen" class="centered-screen">
+        <div class="auth-box">
+            <i class="fab fa-telegram" style="font-size: 50px; color: #0088cc;"></i>
+            <h2>Kanal Onayı</h2>
+            <p>Lütfen duyuru kanalımıza katılın.</p>
+            <a href="https://t.me/drainpanelduyuru" target="_blank" class="btn-primary" onclick="verifyTelegram()" style="display:block; text-decoration:none;">Kanala Katıldım</a>
+        </div>
+    </div>
+
+    <div id="main-layout">
+        <div class="sidebar">
+            <div class="sidebar-header">DRAİN SORGU</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                <li><a href="#" onclick="showSection('sulale-sorgu')"><i class="fas fa-users"></i> Sülale Sorgulama</a></li>
+                <li><a href="#" onclick="showSection('gsm-tc-sorgu')"><i class="fas fa-phone"></i> GSM'den TC Sorgu</a></li>
+                <hr style="border:0; border-top:1px solid #333;">
+                <li><a href="https://t.me/drainpanelduyuru" target="_blank" style="color: #0088cc;"><i class="fab fa-telegram"></i> Duyuru Kanalı</a></li>
+                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+            </ul>
         </div>
 
-        <div id="telegram-screen" class="centered-screen">
-            <h2>DUR! Önce Kanala Katıl</h2>
-            <p>Paneli kullanmak için Telegram kanalımıza abone olmalısınız.</p>
-            <a href="https://t.me/KanalLinkin" target="_blank" class="btn-primary" onclick="verifyTelegram()">Kanala Katıldım</a>
+        <div class="content">
+            <div id="home-section">
+                <h1 id="welcome-text">Hoş Geldin!</h1>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Toplam Üye</h3>
+                        <p id="total-users">128</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Aktif Kullanıcı</h3>
+                        <p id="active-users">7</p>
+                    </div>
+                </div>
+                <p>Sol menüden yapmak istediğiniz işlemi seçebilirsiniz.</p>
+            </div>
+
+            <div id="sulale-sorgu" class="query-section">
+                <h2>Sülale Sorgulama</h2>
+                <input type="text" placeholder="TC Kimlik No Giriniz...">
+                <button class="btn-primary" style="width:auto;">Sorgula</button>
+            </div>
+
+            <div id="gsm-tc-sorgu" class="query-section">
+                <h2>GSM'den TC Sorgulama</h2>
+                <input type="text" placeholder="Telefon Numarası Giriniz...">
+                <button class="btn-primary" style="width:auto;">Sorgula</button>
+            </div>
         </div>
-
-        <div id="main-content">
-            <h1>Hoş Geldin, <span id="user-display-name">Kullanıcı</span>!</h1>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h3>Toplam Üye</h3>
-                    <p id="total-users">Hesaplanıyor...</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Aktif Kullanıcı</h3>
-                    <p id="active-users">1</p>
-                </div>
-            </div>
-
-            </div>
     </div>
 
     <script>
-        // Sayfa yüklendiğinde akışı yöneten ana fonksiyon
-        function manageFlow(user) {
-            const authScreen = document.getElementById('auth-screen');
-            const telegramScreen = document.getElementById('telegram-screen');
-            const mainContent = document.getElementById('main-content');
+        // Akış Yönetimi
+        function checkState() {
+            const user = localStorage.getItem('isLoggedIn'); // Firebase entegre edilince auth.currentUser olacak
+            const telegramJoined = localStorage.getItem('telegramJoined');
 
-            // Her şeyi önce gizle
-            authScreen.style.display = 'none';
-            telegramScreen.style.display = 'none';
-            mainContent.style.display = 'none';
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('telegram-screen').style.display = 'none';
+            document.getElementById('main-layout').style.display = 'none';
 
             if (!user) {
-                // Giriş yapmamışsa sadece giriş ekranı
-                authScreen.style.display = 'flex';
+                document.getElementById('auth-screen').style.display = 'flex';
+            } else if (!telegramJoined) {
+                document.getElementById('telegram-screen').style.display = 'flex';
             } else {
-                // Giriş yapmışsa Telegram kontrolü (Simüle ediliyor)
-                const isTelegramJoined = localStorage.getItem('telegramJoined') === 'true';
-
-                if (!isTelegramJoined) {
-                    telegramScreen.style.display = 'flex';
-                } else {
-                    // Her şey tamamsa ana içeriği göster
-                    mainContent.style.display = 'block';
-                    document.getElementById('user-display-name').innerText = user.email.split('@')[0];
-                    loadStats();
-                }
+                document.getElementById('main-layout').style.display = 'flex';
             }
         }
 
+        function login() {
+            // Şimdilik simüle ediyoruz
+            localStorage.setItem('isLoggedIn', 'true');
+            checkState();
+        }
+
         function verifyTelegram() {
-            // Kullanıcı butona basınca katılmış kabul ediyoruz (LocalStorage şimdilik çözüm)
             localStorage.setItem('telegramJoined', 'true');
+            setTimeout(() => { checkState(); }, 500);
+        }
+
+        function logout() {
+            localStorage.clear();
             location.reload();
         }
 
-        function loadStats() {
-            // Buraya gerçek Firebase verileri bağlanabilir
-            document.getElementById('total-users').innerText = "128"; // Örnek sayı
-            document.getElementById('active-users').innerText = Math.floor(Math.random() * 10) + 1;
+        function showSection(id) {
+            // Hepsini gizle
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('sulale-sorgu').style.display = 'none';
+            document.getElementById('gsm-tc-sorgu').style.display = 'none';
+            
+            // Seçileni göster
+            if(id === 'home') document.getElementById('home-section').style.display = 'block';
+            else document.getElementById(id).style.display = 'block';
         }
 
-        // Firebase Auth Dinleyicisi (Örnek Yapı)
-        /* auth.onAuthStateChanged((user) => {
-            manageFlow(user);
-        });
-        */
-        
-        // Şimdilik test için (User yokmuş gibi başlar):
-        manageFlow(null); 
+        // İlk açılışta kontrol et
+        checkState();
     </script>
 </body>
 </html>
